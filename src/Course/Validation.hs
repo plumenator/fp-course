@@ -10,10 +10,10 @@ import Course.Core
 -- >>> import Test.QuickCheck
 -- >>> import qualified Prelude as P(fmap, either)
 -- >>> instance Arbitrary a => Arbitrary (Validation a) where arbitrary = P.fmap (P.either Error Value) arbitrary
-data Validation a = Error Err | Value a
+data Validation a = Error Err | Value a -- sum types, injunctions, variant enums, tagged unions, OR type
   deriving (Eq, Show)
 
-type Err = P.String
+type Err = P.String -- type synonym
 
 -- | Returns whether or not the given validation is an error.
 --
