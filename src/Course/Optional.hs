@@ -27,8 +27,8 @@ fullOr ::
   a
   -> Optional a
   -> a
-fullOr =
-  error "todo: Course.Optional#fullOr"
+fullOr v Empty = v
+fullOr _ (Full v) = v
 
 -- | Map the given function on the possible value.
 --
@@ -41,8 +41,8 @@ mapOptional ::
   (a -> b)
   -> Optional a
   -> Optional b
-mapOptional =
-  error "todo: Course.Optional#mapOptional"
+mapOptional _ Empty = Empty
+mapOptional f (Full v) = Full (f v)
 
 -- | Bind the given function on the possible value.
 --
@@ -58,8 +58,8 @@ bindOptional ::
   (a -> Optional b)
   -> Optional a
   -> Optional b
-bindOptional =
-  error "todo: Course.Optional#bindOptional"
+bindOptional _ Empty = Empty
+bindOptional f (Full a) = f a
 
 -- | Try the first optional for a value. If it has a value, use it; otherwise,
 -- use the second value.
@@ -79,8 +79,8 @@ bindOptional =
   Optional a
   -> Optional a
   -> Optional a
-(<+>) =
-  error "todo: Course.Optional#(<+>)"
+(<+>) Empty v = v
+(<+>) v _ = v
 
 -- | Replaces the Full and Empty constructors in an optional.
 --
@@ -94,8 +94,8 @@ optional ::
   -> b
   -> Optional a
   -> b
-optional =
-  error "todo: Course.Optional#optional"
+optional _ v Empty = v
+optional f _ (Full v) = f v
 
 applyOptional :: Optional (a -> b) -> Optional a -> Optional b
 applyOptional f a = bindOptional (\f' -> mapOptional f' a) f
@@ -105,7 +105,7 @@ twiceOptional f = applyOptional . mapOptional f
 
 contains :: Eq a => a -> Optional a -> Bool
 contains _ Empty = False
-contains a (Full z) = a == z
+contains y (Full z) = y == z
 
 instance P.Functor Optional where
   fmap =
