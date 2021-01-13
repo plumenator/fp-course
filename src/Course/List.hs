@@ -313,6 +313,7 @@ reverse ::
   List a
   -> List a
 -- reverse as = foldRight (flip (.)) id (map (:.) as) Nil
+-- reverse as = foldRight (flip (.) . (:.)) id as Nil
 reverse = foldLeft (flip (:.)) Nil
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
