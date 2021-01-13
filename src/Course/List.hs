@@ -243,9 +243,10 @@ flattenAgain = flatMap id
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional = foldRight (ocons) (Full Nil) where
-  ox `ocons` oacc = bindOptional (flip f oacc) ox
-  f x = mapOptional (x :.)
+-- seqOptional = foldRight ocons (Full Nil) where
+--   ox `ocons` oacc = bindOptional (flip f oacc) ox
+--   f x = mapOptional (x :.)
+seqOptional = foldRight (twiceOptional (:.)) (Full Nil)
 
 -- | Find the first element in the list matching the predicate.
 --
