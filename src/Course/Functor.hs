@@ -42,7 +42,7 @@ instance Functor ExactlyOne where
     -> ExactlyOne a
     -> ExactlyOne b
   (<$>) =
-    error "todo: Course.Functor (<$>)#instance ExactlyOne"
+    mapExactlyOne
 
 -- | Maps a function on the List functor.
 --
