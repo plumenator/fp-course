@@ -122,7 +122,7 @@ sum = foldLeft (+) 0
 length ::
   List a
   -> Int
-length = sum . map (const 1)
+length = foldRight (const (1 +)) 0
 
 -- | Map the given function on each element of the list.
 --
