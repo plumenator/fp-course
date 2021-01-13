@@ -97,7 +97,7 @@ headOr = foldRight const
 product ::
   List Int
   -> Int
-product = foldLeft (*) 1
+product = foldRight (*) 1
 
 -- | Sum the elements of the list.
 --
