@@ -300,11 +300,19 @@ lengthGT4 _ = False
 -- prop> \x -> let types = x :: List Int in reverse x ++ reverse y == reverse (y ++ x)
 --
 -- prop> \x -> let types = x :: Int in reverse (x :. Nil) == x :. Nil
+
+-- 1 :. 2 :. 3 :. Nil
+-- becomes
+-- 3 :. 2 :. 1 :. Nil
+-- which is
+-- ((3 :.) . (2 :.) . (1 :.)) Nil
+-- which is
+-- ((1 :.) |> (2 :.) |> (3 :.)) Nil where |> = flip (.)
 reverse ::
   List a
   -> List a
-reverse =
-  error "todo: Course.List#reverse"
+reverse as = foldRight (flip (.)) id (map (:.) as) Nil
+
 
 -- | Produce an infinite `List` that seeds with the given value at its head,
 -- then runs the given function for subsequent elements
