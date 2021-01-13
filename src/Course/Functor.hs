@@ -149,7 +149,7 @@ void ::
   k a
   -> k ()
 void =
-  error "todo: Course.Functor#void"
+  (() <$)
 
 -----------------------
 -- SUPPORT LIBRARIES --
