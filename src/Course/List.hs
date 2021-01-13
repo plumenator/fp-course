@@ -243,8 +243,9 @@ flattenAgain = flatMap id
 seqOptional ::
   List (Optional a)
   -> Optional (List a)
-seqOptional =
-  error "todo: Course.List#seqOptional"
+seqOptional = foldRight (ocons) (Full Nil) where
+  ox `ocons` oacc = bindOptional (flip f oacc) ox
+  f x = mapOptional (x :.)
 
 -- | Find the first element in the list matching the predicate.
 --
