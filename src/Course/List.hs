@@ -136,8 +136,10 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map _ Nil = Nil
-map f (x :. xs) = f x :. map f xs
+-- map _ Nil = Nil
+-- map f (x :. xs) = f x :. map f xs
+map f = foldRight fcons Nil where
+  x `fcons` xs = f x :. xs
 
 -- | Return elements satisfying the given predicate.
 --
