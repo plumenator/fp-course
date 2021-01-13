@@ -138,8 +138,9 @@ map ::
   -> List b
 -- map _ Nil = Nil
 -- map f (x :. xs) = f x :. map f xs
-map f = foldRight fcons Nil where
-  x `fcons` xs = f x :. xs
+-- map f = foldRight fcons Nil where
+--   x `fcons` xs = f x :. xs
+map f = foldRight ((:.) . f) Nil
 
 -- | Return elements satisfying the given predicate.
 --
