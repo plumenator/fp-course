@@ -209,7 +209,8 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
-flatMap f = foldRight (++) Nil . map f
+-- flatMap f = foldRight (++) Nil . map f
+flatMap f = foldRight ((++) . f) Nil
 
 -- | Flatten a list of lists to a list (again).
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
