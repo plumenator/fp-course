@@ -99,8 +99,8 @@ instance Functor ((->) t) where
   a
   -> k b
   -> k a
-(<$) =
-  error "todo: Course.Functor#(<$)"
+a <$ f =
+  const a <$> f
 
 -- | Apply a value to a functor-of-functions.
 --
