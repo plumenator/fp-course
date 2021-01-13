@@ -96,8 +96,7 @@ headOr _ (x :. _) = x
 product ::
   List Int
   -> Int
-product =
-  error "todo: Course.List#product"
+product = foldLeft (*) 1
 
 -- | Sum the elements of the list.
 --
