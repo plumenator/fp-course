@@ -152,8 +152,8 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
-filter =
-  error "todo: Course.List#filter"
+filter p = foldRight pcons Nil where
+  x `pcons` xs = if p x then (x :. xs) else xs
 
 -- | Append two lists to a new list.
 --
