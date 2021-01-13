@@ -156,8 +156,9 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
-filter p = foldRight pcons Nil where
-  x `pcons` xs = if p x then (x :. xs) else xs
+-- filter p = foldRight pcons Nil where
+--   x `pcons` xs = if p x then (x :. xs) else xs
+filter p = foldRight (\x -> if p x then (x :.) else id) Nil
 
 -- | Append two lists to a new list.
 --
