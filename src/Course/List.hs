@@ -121,8 +121,7 @@ sum = foldLeft (+) 0
 length ::
   List a
   -> Int
-length =
-  error "todo: Course.List#length"
+length = sum . map (const 1)
 
 -- | Map the given function on each element of the list.
 --
