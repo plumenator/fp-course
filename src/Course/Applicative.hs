@@ -284,8 +284,8 @@ lift1 =
   k a
   -> k b
   -> k b
-(*>) =
-  error "todo: Course.Applicative#(*>)"
+(*>) a b =
+  const <$> b <*> a
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
