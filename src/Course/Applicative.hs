@@ -259,7 +259,7 @@ lift1 ::
   -> k a
   -> k b
 lift1 =
-  error "todo: Course.Applicative#lift1"
+  (<*>) . lift0
 
 -- | Apply, discarding the value of the first argument.
 -- Pronounced, right apply.
