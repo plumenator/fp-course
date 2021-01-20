@@ -231,8 +231,8 @@ lift4 ::
   -> k c
   -> k d
   -> k e
-lift4 =
-  error "todo: Course.Applicative#lift4"
+lift4 f a b c d =
+  lift3 f a b c <*> d
 
 -- | Apply a nullary function in the environment.
 lift0 ::
