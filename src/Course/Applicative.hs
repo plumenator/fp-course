@@ -284,8 +284,8 @@ lift1 =
   k a
   -> k b
   -> k b
-(*>) a b =
-  const <$> b <*> a
+(*>) =
+  lift2 (flip const)
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
