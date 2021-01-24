@@ -287,8 +287,25 @@ find p = foldRight fcons Empty where
 lengthGT4 ::
   List a
   -> Bool
-lengthGT4 (_ :. _ :. _ :. _ :. _ :. _) = True
-lengthGT4 _ = False
+-- lengthGT4 (_ :. _ :. _ :. _ :. _) =
+--   True
+-- lengthGT4 _ =
+--   False
+lengthGT4 as =
+  length (take' 5 as) > 4
+
+take' ::
+  (Num n, Ord n) =>
+  n
+  -> List a
+  -> List a
+take' _ Nil =
+  Nil
+take' n _ | n <= 0 =
+  Nil
+take' n (a :. as) =
+  a :. take' (n - 1) as
+
 
 -- | Reverse a list.
 --
