@@ -36,8 +36,10 @@ instance Monad ExactlyOne where
     (a -> ExactlyOne b)
     -> ExactlyOne a
     -> ExactlyOne b
+  -- (=<<) f =
+  --   f . runExactlyOne
   (=<<) =
-    error "todo: Course.Monad (=<<)#instance ExactlyOne"
+    (. runExactlyOne)
 
 -- | Binds a function on a List.
 --
