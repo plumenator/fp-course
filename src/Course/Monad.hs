@@ -172,8 +172,9 @@ infixl 1 >>=
   -> (a -> k b)
   -> a
   -> k c
-(<=<) =
-  error "todo: Course.Monad#(<=<)"
+(<=<) bkc akb a =
+--   akb a >>= bkc
+  bkc =<< akb a
 
 infixr 1 <=<
 
