@@ -112,8 +112,12 @@ instance Monad ((->) t) where
   k (a -> b)
   -> k a
   -> k b
-(<**>) =
-  error "todo: Course.Monad#(<**>)"
+(<**>) kab ka =
+  -- f kab =<< ka
+  -- where
+  --   f kg a = ($ a) <$> kg
+  -- kab >>= (<$> ka)
+  (<$> ka) =<< kab
 
 infixl 4 <**>
 
