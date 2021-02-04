@@ -103,6 +103,8 @@ instance Functor ((->) t) where
 --   const a <$> f
 (<$) =
   (<$>) . const
+-- (<$) =
+--   (<$>) <$> const
 
 -- | Apply a value to a functor-of-functions.
 --
