@@ -80,9 +80,9 @@ instance Functor Optional where
 -- 17
 instance Functor ((->) t) where
   (<$>) ::
-    (a -> b)
-    -> ((->) t a)
-    -> ((->) t b)
+    (b -> c)
+    -> (a -> b)
+    -> (a -> c)
   (<$>) =
     (.)
 
