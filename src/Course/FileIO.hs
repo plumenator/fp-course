@@ -95,7 +95,7 @@ printFiles ::
   -> IO ()
 printFiles =
   -- foldLeft (>>) (pure ()) . (<$>) (\(fp, cs) -> printFile fp cs)
-  void . sequence . (<$>) (\(fp, cs) -> printFile fp cs)
+  void . traverseList (\(fp, cs) -> printFile fp cs)
 
 -- Given a file name, return (file name and file contents).
 -- Use @readFile@.
@@ -111,7 +111,10 @@ getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
 getFiles =
-  sequence . (<$>) getFile
+  traverseList getFile
+
+traverseList :: Applicative k => (a -> k b) -> List a -> k (List b)
+traverseList f = sequence . (<$>) f
 
 -- Given a file name, read it and for each line in that file, read and print contents of each.
 -- Use @getFiles@, @lines@, and @printFiles@.
