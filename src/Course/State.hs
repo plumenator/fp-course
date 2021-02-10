@@ -170,6 +170,10 @@ findM ::
 findM p = foldRight fcons (pure Empty) where
   a `fcons` foa = p a >>=
                  \b -> if b then pure (Full a) else foa
+  -- fcons a = lift2 (\b oa -> if b then Full a else oa) (p a)
+  -- f can be Applicative, which is actually more general
+  -- TODO: check if the monadic version is short-circuiting and the applicative one isn't
+  -- https://stackoverflow.com/questions/23342184/difference-between-monad-and-applicative-in-haskell
 
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
