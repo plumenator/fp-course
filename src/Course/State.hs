@@ -77,8 +77,8 @@ get =
 put ::
   s
   -> State s ()
-put =
-  error "todo: Course.State#put"
+put s =
+  State (const ((), s))
 
 -- | Implement the `Functor` instance for `State s`.
 --
