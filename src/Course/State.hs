@@ -66,7 +66,9 @@ eval =
 get ::
   State s s
 get =
-  error "todo: Course.State#get"
+  -- State (\s -> (s, s))
+  -- <https://stackoverflow.com/a/32324712/76813>
+  State (join (,))
 
 -- | A `State` where the resulting state is seeded with the given value.
 --
