@@ -51,7 +51,7 @@ eval ::
   -> s
   -> a
 eval =
-  error "todo: Course.State#eval"
+  (fst .) . runState
 
 -- | A `State` where the state also distributes into the produced value.
 --
