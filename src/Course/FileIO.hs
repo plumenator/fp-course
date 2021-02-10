@@ -94,7 +94,8 @@ printFiles ::
   List (FilePath, Chars)
   -> IO ()
 printFiles =
-  foldLeft (>>) (pure ()) . (<$>) (\(fp, cs) -> printFile fp cs)
+  -- foldLeft (>>) (pure ()) . (<$>) (\(fp, cs) -> printFile fp cs)
+  void . sequence . (<$>) (\(fp, cs) -> printFile fp cs)
 
 -- Given a file name, return (file name and file contents).
 -- Use @readFile@.
