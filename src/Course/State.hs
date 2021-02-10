@@ -223,4 +223,6 @@ isHappy ::
   Integer
   -> Bool
 isHappy =
-  error "todo: Course.State#isHappy"
+  contains 1 . firstRepeat . produce step
+  where
+    step = toInteger . sum . (join (*) . digitToInt <$>) . listh . show
