@@ -69,14 +69,22 @@ instance Monad k => Applicative (StateT s k) where
   pure ::
     a
     -> StateT s k a
-  pure =
-    error "todo: Course.StateT pure#instance (StateT s k)"
+  pure a =
+    StateT ( pure . (,) a )
   (<*>) ::
     StateT s k (a -> b)
     -> StateT s k a
     -> StateT s k b
-  (<*>) =
-    error "todo: Course.StateT (<*>)#instance (StateT s k)"
+  (<*>) skab ska =
+    StateT ( \s ->
+               runStateT skab s >>= \(ab, s') ->
+               (\(a, s'') -> (ab a, s'')) <$> runStateT ska s'
+           )
+    -- StateT ( \s ->
+    --            runStateT skab s >>= \(ab, s') ->
+    --            runStateT ska s' >>= \(a, s'') ->
+    --            pure (ab a, s'')
+    --        )
 
 -- | Implement the `Monad` instance for @StateT s k@ given a @Monad k@.
 -- Make sure the state value is passed through in `bind`.
