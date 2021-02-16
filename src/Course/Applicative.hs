@@ -163,8 +163,9 @@ lift2 ::
   -> k a
   -> k b
   -> k c
-lift2 f a b =
-  pure f <*> a <*> b
+lift2 abc ka kb =
+  -- pure abc <*> ka <*> kb
+  abc <$> ka <*> kb
 
 -- | Apply a ternary function in the environment.
 -- /can be written using `lift2` and `(<*>)`./
