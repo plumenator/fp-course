@@ -55,7 +55,8 @@ instance Applicative ExactlyOne where
     -> ExactlyOne a
     -> ExactlyOne b
   (<*>) =
-    mapExactlyOne . runExactlyOne
+    -- mapExactlyOne . runExactlyOne
+    (<$>) . runExactlyOne
 
 -- | Insert into a List.
 --
