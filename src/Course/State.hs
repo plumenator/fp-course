@@ -125,10 +125,10 @@ instance Applicative (State s) where
     State s (a -> b)
     -> State s a
     -> State s b
-  (<*>) sf sa =
-    State (\s -> let (f, s' ) = runState sf s
+  (<*>) sab sa =
+    State (\s -> let (ab, s' ) = runState sab s
                      (a, s'') = runState sa s'
-                 in (f a, s''))
+                 in (ab a, s''))
   -- (<*>) (State sabs) (State sas) =
   --   State (\s -> let (ab, s') = sabs s
   --                    (a, s'') = sas s'
