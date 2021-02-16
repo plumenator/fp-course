@@ -75,7 +75,9 @@ instance Applicative List where
     -> List a
     -> List b
   (<*>) fs as =
-    flatMap (flip map as) fs
+    -- flatMap (flip map as) fs
+    -- flatten $ (<$> as) <$> fs
+    flatMap (<$> as) fs
 
 -- | Insert into an Optional.
 --
