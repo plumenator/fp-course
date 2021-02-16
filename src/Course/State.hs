@@ -110,11 +110,11 @@ instance Applicative (State s) where
     State s (a -> b)
     -> State s a
     -> State s b
-  (<*>) sf sa =
+  (<*>) sab sa =
     State { runState =
-            \s -> let (f, s' ) = runState sf s
+            \s -> let (ab, s' ) = runState sab s
                       (a, s'') = runState sa s'
-                  in (f a, s'')
+                  in (ab a, s'')
           }
 
 -- | Implement the `Monad` instance for `State s`.
