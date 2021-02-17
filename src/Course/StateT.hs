@@ -331,8 +331,10 @@ instance Monad k => Monad (OptionalT k) where
     (a -> OptionalT k b)
     -> OptionalT k a
     -> OptionalT k b
-  (=<<) =
-    error "todo: Course.StateT (=<<)#instance (OptionalT k)"
+  (=<<) aokb oka =
+    OptionalT ( runOptionalT oka >>= \oa ->
+                  onFull (runOptionalT . aokb) oa
+              )
 
 -- | A `Logger` is a pair of a list of log values (`[l]`) and an arbitrary value (`a`).
 data Logger l a =
