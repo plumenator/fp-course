@@ -150,8 +150,10 @@ execT ::
   StateT s k a
   -> s
   -> k s
+-- execT ska s =
+--   snd <$> runStateT ska s
 execT =
-  error "todo: Course.StateT#execT"
+  ((snd <$>) .) . runStateT
 
 -- | Run the `State'` seeded with `s` and retrieve the resulting state.
 --
