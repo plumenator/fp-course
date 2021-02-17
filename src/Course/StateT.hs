@@ -203,7 +203,7 @@ getT ::
   Applicative k =>
   StateT s k s
 getT =
-  error "todo: Course.StateT#getT"
+  StateT ( \s -> pure (s, s) )
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
