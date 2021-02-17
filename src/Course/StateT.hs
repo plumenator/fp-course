@@ -248,8 +248,10 @@ distinctF ::
   (Ord a, Num a) =>
   List a
   -> Optional (List a)
-distinctF =
-  error "todo: Course.StateT#distinctF"
+distinctF xs =
+  evalT (filtering p xs) S.empty where
+  p x = StateT (\s -> if x > 100 then Empty else Full (not (S.member x s), S.insert x s))
+
 
 -- | An `OptionalT` is a functor of an `Optional` value.
 data OptionalT k a =
