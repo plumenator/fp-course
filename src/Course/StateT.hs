@@ -305,15 +305,22 @@ instance Monad k => Applicative (OptionalT k) where
   pure ::
     a
     -> OptionalT k a
+  -- pure a =
+  --   OptionalT ( pure (Full a) )
   pure =
-    error "todo: Course.StateT pure#instance (OptionalT k)"
+    -- OptionalT . pure . Full
+    OptionalT . pure . pure
 
   (<*>) ::
     OptionalT k (a -> b)
     -> OptionalT k a
     -> OptionalT k b
-  (<*>) =
-    error "todo: Course.StateT (<*>)#instance (OptionalT k)"
+  (<*>) okab oka =
+    OptionalT ( runOptionalT okab >>= \oab ->
+                  onFull (\ab -> runOptionalT (ab <$> oka)) oab
+              )
+    -- TODO: This solution from Brian McKenna's videos doesn't work
+    -- OptionalT ( lift2 (<*>) (runOptionalT okab) (runOptionalT oka) )
 
 -- | Implement the `Monad` instance for `OptionalT k` given a Monad k.
 --
