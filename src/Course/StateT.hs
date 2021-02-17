@@ -190,8 +190,10 @@ eval' ::
   State' s a
   -> s
   -> a
+-- eval' sa s =
+--   runExactlyOne (evalT sa s)
 eval' =
-  error "todo: Course.StateT#eval'"
+  (runExactlyOne .) . evalT
 
 -- | A `StateT` where the state also distributes into the produced value.
 --
