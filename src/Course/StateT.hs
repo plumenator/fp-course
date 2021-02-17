@@ -125,8 +125,8 @@ type State' s a =
 state' ::
   (s -> (a, s))
   -> State' s a
-state' =
-  error "todo: Course.StateT#state'"
+state' sas =
+  StateT ( ExactlyOne . sas  )
 
 -- | Provide an unwrapper for `State'` values.
 --
