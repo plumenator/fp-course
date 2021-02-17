@@ -163,8 +163,10 @@ exec' ::
   State' s a
   -> s
   -> s
+-- exec' sa s =
+--   runExactlyOne (execT sa s)
 exec' =
-  error "todo: Course.StateT#exec'"
+  (runExactlyOne .) . execT
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting value.
 --
