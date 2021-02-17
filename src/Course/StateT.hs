@@ -217,7 +217,7 @@ putT ::
   s
   -> StateT s k ()
 putT =
-  error "todo: Course.StateT#putT"
+  \s -> StateT ( \_ -> pure ((), s) )
 
 -- | Remove all duplicate elements in a `List`.
 --
