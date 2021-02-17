@@ -197,8 +197,8 @@ lift3 ::
   -> k b
   -> k c
   -> k d
-lift3 f a b c =
-  lift2 f a b <*> c
+lift3 abcd ka kb kc =
+  lift2 abcd ka kb <*> kc
 
 -- | Apply a quaternary function in the environment.
 -- /can be written using `lift3` and `(<*>)`./
@@ -231,8 +231,8 @@ lift4 ::
   -> k c
   -> k d
   -> k e
-lift4 f a b c d =
-  lift3 f a b c <*> d
+lift4 abcde ka kb kc kd =
+  lift3 abcde ka kb kc <*> kd
 
 -- | Apply a nullary function in the environment.
 lift0 ::
@@ -377,6 +377,7 @@ replicateA n ka =
 -- Empty
 --
 -- >>> filtering (>) (4 :. 5 :. 6 :. 7 :. 8 :. 9 :. 10 :. 11 :. 12 :. Nil) 8
+-- >>> filtering (\a -> (a >)) (4 :. 5 :. 6 :. 7 :. 8 :. 9 :. 10 :. 11 :. 12 :. Nil) 8
 -- [9,10,11,12]
 --
 -- >>> filtering (const $ True :. True :.  Nil) (1 :. 2 :. 3 :. Nil)
@@ -387,8 +388,8 @@ filtering ::
   (a -> k Bool)
   -> List a
   -> k (List a)
-filtering p =
-  foldRight (\a fas -> lift2 (f a) (p a) fas) (pure Nil)
+filtering akb =
+  foldRight (\a kas -> lift2 (f a) (akb a) kas) (pure Nil)
   where
     f a b = if b then (a :.) else id
 
