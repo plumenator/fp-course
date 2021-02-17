@@ -258,6 +258,10 @@ lift1 ::
   (a -> b)
   -> k a
   -> k b
+-- lift1 ab ka =
+  -- ab <$> ka
+  -- pure ab <*> ka
+  -- lift0 ab <*> ka
 lift1 =
   (<*>) . lift0
 
@@ -286,6 +290,8 @@ lift1 =
   -> k b
 (*>) =
   lift2 (flip const)
+  -- lift2 (\_ -> \b -> b)
+  -- lift2 (const id)
 
 -- | Apply, discarding the value of the second argument.
 -- Pronounced, left apply.
@@ -312,6 +318,7 @@ lift1 =
   -> k b
 (<*) =
   lift2 const
+  -- lift2 (flip (const id))
 
 -- | Sequences a list of structures to a structure of list.
 --
