@@ -136,8 +136,10 @@ runState' ::
   State' s a
   -> s
   -> (a, s)
+-- runState' sa s =
+--   runExactlyOne (runStateT sa s)
 runState' =
-  error "todo: Course.StateT#runState'"
+  (runExactlyOne .) . runStateT
 
 -- | Run the `StateT` seeded with `s` and retrieve the resulting state.
 --
