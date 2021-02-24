@@ -350,8 +350,8 @@ instance Functor (Logger l) where
     (a -> b)
     -> Logger l a
     -> Logger l b
-  (<$>) =
-    error "todo: Course.StateT (<$>)#instance (Logger l)"
+  (<$>) f (Logger ls a) =
+    Logger ls (f a)
 
 -- | Implement the `Applicative` instance for `Logger`.
 --
