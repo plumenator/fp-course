@@ -396,9 +396,7 @@ filtering ::
   -> List a
   -> k (List a)
 filtering akb =
-  foldRight (\a kas -> lift2 (f a) (akb a) kas) (pure Nil)
-  where
-    f a b = if b then (a :.) else id
+  foldRight (\a -> lift2 (\b -> if b then (a :.) else id) (akb a)) (pure Nil)
 
 -----------------------
 -- SUPPORT LIBRARIES --
