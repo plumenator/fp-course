@@ -384,8 +384,8 @@ instance Monad (Logger l) where
     (a -> Logger l b)
     -> Logger l a
     -> Logger l b
-  (=<<) =
-    error "todo: Course.StateT (=<<)#instance (Logger l)"
+  (=<<) alb (Logger l a) =
+    Logger l id <*> (alb a)
 
 -- | A utility function for producing a `Logger` with one log value.
 --
