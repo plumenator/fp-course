@@ -106,8 +106,8 @@ instance Contravariant (SwappedArrow t) where
     (b -> a)
     -> SwappedArrow x a
     -> SwappedArrow x b
-  (>$<) =
-    error "todo: Course.Contravariant (>$<)#instance SwappedArrow"
+  (>$<) f (SwappedArrow g) =
+    SwappedArrow (g . f)
 
 
 -- | If we give our 'Contravariant' an @a@, then we can "accept" any
