@@ -79,8 +79,8 @@ instance Contravariant Predicate where
     (b -> a)
     -> Predicate a
     -> Predicate b
-  (>$<) =
-    error "todo: Course.Contravariant (>$<)#instance Predicate"
+  (>$<) f (Predicate g) =
+    Predicate (g . f)
 
 -- | Use the function before comparing.
 --
