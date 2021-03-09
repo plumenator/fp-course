@@ -276,6 +276,8 @@ instance Functor k => Functor (OptionalT k) where
     -> OptionalT k b
   (<$>) ab oka =
     OptionalT ( (ab <$>) <$> runOptionalT oka )
+  -- (<$>) ab =
+  --   OptionalT . ((ab <$>) <$>) . runOptionalT
 
 -- | Implement the `Applicative` instance for `OptionalT k` given a Monad k.
 --
