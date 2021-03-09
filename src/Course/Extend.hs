@@ -91,4 +91,4 @@ cojoin ::
   k a
   -> k (k a)
 cojoin =
-  error "todo: Course.Extend#cojoin"
+  (<<=) id
