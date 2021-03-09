@@ -334,9 +334,7 @@ instance Monad k => Monad (OptionalT k) where
     -> OptionalT k a
     -> OptionalT k b
   (=<<) aokb oka =
-    OptionalT ( runOptionalT oka >>= \oa ->
-                  onFull (runOptionalT . aokb) oa
-              )
+    OptionalT ( runOptionalT oka >>= onFull (runOptionalT . aokb) )
 
 -- | A `Logger` is a pair of a list of log values (`[l]`) and an arbitrary value (`a`).
 data Logger l a =
