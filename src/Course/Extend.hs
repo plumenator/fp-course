@@ -69,8 +69,9 @@ instance Extend Optional where
     (Optional a -> b)
     -> Optional a
     -> Optional b
-  (<<=) =
-    error "todo: Course.Extend (<<=)#instance Optional"
+  -- (<<=) _ Empty = Empty
+  -- (<<=) f oa = Full (f oa)
+  (<<=) f oa = f. Full <$> oa
 
 -- | Duplicate the functor using extension.
 --
