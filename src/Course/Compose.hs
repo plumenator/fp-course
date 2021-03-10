@@ -24,10 +24,12 @@ instance (Applicative f, Applicative g) =>
   Applicative (Compose f g) where
 -- Implement the pure function for an Applicative instance for Compose
   pure =
-    error "todo: Course.Compose pure#instance (Compose f g)"
+    Compose . pure . pure
 -- Implement the (<*>) function for an Applicative instance for Compose
-  (<*>) =
-    error "todo: Course.Compose (<*>)#instance (Compose f g)"
+  Compose fgab <*> Compose fga =
+    -- Compose (((\gab -> (gab <*>)) <$> fgab) <*> fga)
+    -- Compose ((<*>) <$> fgab <*> fga)
+    Compose (lift2 (<*>) fgab fga)
 
 instance (Monad f, Monad g) =>
   Monad (Compose f g) where
