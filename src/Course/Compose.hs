@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
@@ -31,11 +32,22 @@ instance (Applicative f, Applicative g) =>
     -- Compose ((<*>) <$> fgab <*> fga)
     Compose (lift2 (<*>) fgab fga)
 
+uncompose :: Compose f g a -> f (g a)
+uncompose (Compose fga) = fga
+
+instance (Monad f) =>
+  Monad (Compose f f) where
+  acffb =<< Compose ffa =
+    Compose ((\fa -> (uncompose . acffb) =<< fa) =<< ffa)
+
+
 instance (Monad f, Monad g) =>
   Monad (Compose f g) where
 -- Implement the (=<<) function for a Monad instance for Compose
+  -- acfgb =<< Compose fga =
+  --   Compose ((\ga -> _todo ga) =<< fga)
   (=<<) =
-    error "todo: Course.Compose (=<<)#instance (Compose f g)"
+    error "impossible"
 
 -- Note that the inner g is Contravariant but the outer f is
 -- Functor. We would not be able to write an instance if both were
