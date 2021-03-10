@@ -55,5 +55,5 @@ instance (Monad f, Monad g) =>
 instance (Functor f, Contravariant g) =>
   Contravariant (Compose f g) where
 -- Implement the (>$<) function for a Contravariant instance for Compose
-  (>$<) =
-    error "todo: Course.Compose (>$<)#instance (Compose f g)"
+  ba >$< Compose fga =
+    Compose ((ba >$<) <$> fga)
