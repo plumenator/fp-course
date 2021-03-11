@@ -56,8 +56,8 @@ instance Traversable Optional where
     (a -> k b)
     -> Optional a
     -> k (Optional b)
-  traverse =
-    error "todo: Course.Traversable traverse#instance Optional"
+  traverse f =
+    optional ((Full <$>) . f) (pure Empty)
 
 -- | Sequences a traversable value of structures to a structure of a traversable value.
 --
