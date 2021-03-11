@@ -119,5 +119,7 @@ instance (Functor f, Functor g) =>
 instance (Traversable f, Traversable g) =>
   Traversable (Coproduct f g) where
 -- Implement the traverse function for a Traversable instance for Coproduct
-  traverse =
-    error "todo: Course.Traversable traverse#instance (Coproduct f g)"
+  traverse akb (InL fa) =
+    InL <$> traverse akb fa
+  traverse akb (InR ga) =
+    InR <$> traverse akb ga
