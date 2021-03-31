@@ -333,8 +333,11 @@ moveLeftLoop (ListZipper (p' :. ls) p rs) =
 moveRightLoop ::
   ListZipper a
   -> ListZipper a
-moveRightLoop =
-  error "todo: Course.ListZipper#moveRightLoop"
+moveRightLoop (ListZipper ls p Nil) =
+  ListZipper Nil p' rs where
+  (p', rs) = foldLeft (\(a, as) a2 -> (a2, a :. as)) (p, Nil) ls
+moveRightLoop (ListZipper ls p (p' :. rs)) =
+  ListZipper (p :. ls) p' rs
 
 -- | Move the zipper one position to the left.
 --
