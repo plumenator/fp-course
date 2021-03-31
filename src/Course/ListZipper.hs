@@ -422,8 +422,8 @@ dropLefts (ListZipper _ p rs) =
 dropRights ::
   ListZipper a
   -> ListZipper a
-dropRights =
-  error "todo: Course.ListZipper#dropRights"
+dropRights (ListZipper ls p _) =
+  ListZipper ls p Nil
 
 -- | Move the focus left the given number of positions. If the value is negative, move right instead.
 --
