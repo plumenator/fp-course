@@ -316,8 +316,12 @@ findRight f (ListZipper ls p rs) =
 moveLeftLoop ::
   ListZipper a
   -> ListZipper a
-moveLeftLoop =
-  error "todo: Course.ListZipper#moveLeftLoop"
+moveLeftLoop (ListZipper Nil p rs) =
+  ListZipper ls p' Nil where
+  -- (p' :. ls) = reverse (p :. rs)
+  (p', ls) = foldLeft (\(a, as) a2 -> (a2, a :. as)) (p, Nil) rs
+moveLeftLoop (ListZipper (p' :. ls) p rs) =
+  ListZipper ls p' (p :. rs)
 
 -- | Move the zipper right, or if there are no elements to the right, go to the far left.
 --
