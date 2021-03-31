@@ -390,8 +390,10 @@ swapLeft (ListZipper (p' :. ls) p rs) =
 swapRight ::
   ListZipper a
   -> MaybeListZipper a
-swapRight =
-  error "todo: Course.ListZipper#swapRight"
+swapRight (ListZipper _ _ Nil) =
+  isNotZ
+swapRight (ListZipper ls p (p' :. rs)) =
+  isZ (ListZipper ls p' (p :. rs))
 
 -- | Drop all values to the left of the focus.
 --
