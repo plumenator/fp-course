@@ -407,8 +407,8 @@ swapRight (ListZipper ls p (p' :. rs)) =
 dropLefts ::
   ListZipper a
   -> ListZipper a
-dropLefts =
-  error "todo: Course.ListZipper#dropLefts"
+dropLefts (ListZipper _ p rs) =
+  ListZipper Nil p rs
 
 -- | Drop all values to the right of the focus.
 --
