@@ -375,8 +375,10 @@ moveRight =
 swapLeft ::
   ListZipper a
   -> MaybeListZipper a
-swapLeft =
-  error "todo: Course.ListZipper#swapLeft"
+swapLeft (ListZipper Nil _ _) =
+  isNotZ
+swapLeft (ListZipper (p' :. ls) p rs) =
+  isZ (ListZipper (p :. ls) p' rs)
 
 -- | Swap the current focus with the value to the right of focus.
 --
