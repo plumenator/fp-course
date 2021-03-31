@@ -343,7 +343,7 @@ moveLeft ::
   ListZipper a
   -> MaybeListZipper a
 moveLeft =
-  error "todo: Course.ListZipper#moveLeft"
+  findLeft (const True)
 
 -- | Move the zipper one position to the right.
 --
