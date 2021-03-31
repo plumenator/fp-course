@@ -356,7 +356,7 @@ moveRight ::
   ListZipper a
   -> MaybeListZipper a
 moveRight =
-  error "todo: Course.ListZipper#moveRight"
+  findRight (const True)
 
 -- | Swap the current focus with the value to the left of focus.
 --
