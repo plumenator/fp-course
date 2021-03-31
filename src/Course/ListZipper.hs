@@ -121,8 +121,10 @@ toListZ (MLZ (Full z)) =
 fromList ::
   List a
   -> MaybeListZipper a
-fromList =
-  error "todo: Course.ListZipper#fromList"
+fromList Nil =
+  MLZ Empty
+fromList (x :. xs) =
+  MLZ (Full (ListZipper Nil x xs))
 
 -- | Retrieve the `ListZipper` from the `MaybeListZipper` if there is one.
 --
