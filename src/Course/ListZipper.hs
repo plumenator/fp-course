@@ -134,8 +134,7 @@ fromList (x :. xs) =
 toOptional ::
   MaybeListZipper a
   -> Optional (ListZipper a)
-toOptional =
-  error "todo: Course.ListZipper#toOptional"
+toOptional (MLZ o) = o
 
 zipper ::
   [a]
