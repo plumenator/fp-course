@@ -242,8 +242,8 @@ hasLeft (ListZipper ls _ _)=
 hasRight ::
   ListZipper a
   -> Bool
-hasRight =
-  error "todo: Course.ListZipper#hasRight"
+hasRight (ListZipper _ _ rs)=
+  not (isEmpty rs)
 
 -- | Seek to the left for a location matching a predicate, excluding the
 -- focus.
