@@ -436,14 +436,15 @@ moveLeftN ::
   Int
   -> ListZipper a
   -> MaybeListZipper a
-moveLeftN n lza@(ListZipper ls p rs)
+moveLeftN n lza
   | n < 0     = moveRightN (-n) lza
   | n == 0    = isZ lza
-  | otherwise = isZ (ListZipper ls' p' rs') where
-      ls' = drop n ls
-      (p', rs') = foldLeft (\(a, as) a2 -> (a2, a :. as))
-                  (p, rs)
-                  (take n ls)
+  | otherwise = moveLeftN (n - 1) -<< moveLeft lza
+  -- | otherwise = isZ (ListZipper ls' p' rs') where
+  --     ls' = drop n ls
+  --     (p', rs') = foldLeft (\(a, as) a2 -> (a2, a :. as))
+  --                 (p, rs)
+  --                 (take n ls)
 
 -- | Move the focus right the given number of positions. If the value is negative, move left instead.
 --
@@ -456,14 +457,15 @@ moveRightN ::
   Int
   -> ListZipper a
   -> MaybeListZipper a
-moveRightN n lza@(ListZipper ls p rs)
+moveRightN n lza
   | n < 0     = moveLeftN (-n) lza
   | n == 0    = isZ lza
-  | otherwise = isZ (ListZipper ls' p' rs') where
-      rs' = drop n rs
-      (p', ls') = foldLeft (\(a, as) a2 -> (a2, a :. as))
-                  (p, ls)
-                  (take n rs)
+  | otherwise = moveRightN (n - 1) -<< moveRight lza
+  -- | otherwise = isZ (ListZipper ls' p' rs') where
+  --     rs' = drop n rs
+  --     (p', ls') = foldLeft (\(a, as) a2 -> (a2, a :. as))
+  --                 (p, ls)
+  --                 (take n rs)
 
 -- | Move the focus left the given number of positions. If the value is negative, move right instead.
 -- If the focus cannot be moved, the given number of times, return the value by which it can be moved instead.
