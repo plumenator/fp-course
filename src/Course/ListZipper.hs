@@ -69,8 +69,8 @@ isNotZ = MLZ Empty
 -- >>> (+1) <$> (zipper [3,2,1] 4 [5,6,7])
 -- [4,3,2] >5< [6,7,8]
 instance Functor ListZipper where
-  (<$>) =
-    error "todo: Course.ListZipper (<$>)#instance ListZipper"
+  f <$> (ListZipper ls p rs) =
+    ListZipper (f <$> ls) (f p) (f <$> rs)
 
 -- | Implement the `Functor` instance for `MaybeListZipper`.
 --
