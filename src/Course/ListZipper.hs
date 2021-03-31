@@ -93,8 +93,10 @@ instance Functor MaybeListZipper where
 toList ::
   ListZipper a
   -> List a
-toList =
-  error "todo: Course.ListZipper#toList"
+toList (ListZipper ls p rs) =
+  push ls (p :. rs) where
+  push Nil ys = ys
+  push (x :. xs) ys = push xs (x :. ys)
 
 -- | Convert the given (maybe) zipper back to a list.
 toListZ ::
