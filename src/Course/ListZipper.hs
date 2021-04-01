@@ -12,6 +12,7 @@ import Course.Extend
 import Course.Comonad
 import Course.Traversable
 import qualified Prelude as P
+import Data.Bifunctor as B
 
 -- $setup
 -- >>> import Test.QuickCheck
@@ -501,12 +502,9 @@ moveLeftN' ::
 moveLeftN' n lza
   | n < 0     = moveRightN' (-n) lza
   | n == 0    = Right lza
-  | otherwise = optional (len . moveLeftN' (n - 1))
+  | otherwise = optional (B.first (+ 1) . moveLeftN' (n - 1))
                 (Left 0)
                 (toOptional (moveLeft lza))
-  where
-    len r@(Right _) = r
-    len (Left l)    = Left (l + 1)
 
 -- | Move the focus right the given number of positions. If the value is negative, move left instead.
 -- If the focus cannot be moved, the given number of times, return the value by which it can be moved instead.
@@ -532,12 +530,9 @@ moveRightN' ::
 moveRightN' n lza
   | n < 0     = moveLeftN' (-n) lza
   | n == 0    = Right lza
-  | otherwise = optional (len . moveRightN' (n - 1))
+  | otherwise = optional (B.first (+ 1) . moveRightN' (n - 1))
                 (Left 0)
                 (toOptional (moveRight lza))
-  where
-    len r@(Right _) = r
-    len (Left l)    = Left (l + 1)
 
 -- | Move the focus to the given absolute position in the zipper. Traverse the zipper only to the extent required.
 --
