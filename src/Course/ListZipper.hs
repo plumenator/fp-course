@@ -595,8 +595,12 @@ end lza =
 start ::
   ListZipper a
   -> ListZipper a
-start =
-  error "todo: Course.ListZipper#start"
+start lza =
+  case moveLeft lza of
+    (MLZ Empty) ->
+      lza
+    (MLZ (Full lza')) ->
+      start lza'
 
 -- | Delete the current focus and pull the left values to take the empty position.
 --
