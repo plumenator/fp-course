@@ -573,8 +573,16 @@ index = length . lefts
 end ::
   ListZipper a
   -> ListZipper a
-end =
-  error "todo: Course.ListZipper#end"
+-- end (ListZipper ls p rs) =
+--   ListZipper ls' p' Nil
+--   where
+--     (p', ls') = foldLeft (\(a2, as) a -> (a, a2 :. as)) (p, ls) rs
+end lza =
+  case moveRight lza of
+    (MLZ Empty) ->
+      lza
+    (MLZ (Full lza')) ->
+      end lza'
 
 -- | Move the focus to the start of the zipper.
 --
