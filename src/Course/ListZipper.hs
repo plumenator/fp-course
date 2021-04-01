@@ -649,8 +649,8 @@ insertPushLeft ::
   a
   -> ListZipper a
   -> ListZipper a
-insertPushLeft =
-  error "todo: Course.ListZipper#insertPushLeft"
+insertPushLeft a (ListZipper ls p rs) =
+  ListZipper (p :. ls) a rs
 
 -- | Insert at the current focus and push the right values to make way for the new position.
 --
