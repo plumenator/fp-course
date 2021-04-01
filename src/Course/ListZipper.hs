@@ -629,8 +629,12 @@ deletePullLeft (ListZipper ls _ rs) =
 deletePullRight ::
   ListZipper a
   -> MaybeListZipper a
-deletePullRight =
-  error "todo: Course.ListZipper#deletePullRight"
+deletePullRight (ListZipper ls _ rs) =
+  case rs of
+    Nil ->
+      isNotZ
+    (p' :. rs') ->
+      isZ (ListZipper ls p' rs')
 
 -- | Insert at the current focus and push the left values to make way for the new position.
 --
