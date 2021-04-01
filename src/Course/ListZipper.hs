@@ -612,8 +612,12 @@ start lza =
 deletePullLeft ::
   ListZipper a
   -> MaybeListZipper a
-deletePullLeft =
-  error "todo: Course.ListZipper#deletePullLeft"
+deletePullLeft (ListZipper ls _ rs) =
+  case ls of
+    Nil ->
+      isNotZ
+    (p' :. ls') ->
+      isZ (ListZipper ls' p' rs)
 
 -- | Delete the current focus and pull the right values to take the empty position.
 --
