@@ -724,8 +724,17 @@ instance Applicative MaybeListZipper where
 -- >>> id <<= (zipper [2,1] 3 [4,5])
 -- [[1] >2< [3,4,5],[] >1< [2,3,4,5]] >[2,1] >3< [4,5]< [[3,2,1] >4< [5],[4,3,2,1] >5< []]
 instance Extend ListZipper where
-  (<<=) =
-    error "todo: Course.ListZipper (<<=)#instance ListZipper"
+  (<<=) lzab lza =
+    ListZipper (unfoldr (f moveLeft)
+                 lza
+               )
+    (lzab lza)
+    (unfoldr (f moveRight)
+      lza
+    )
+    where
+      f move lza' = g <$> (toOptional . move) lza'
+      g lza' = (lzab lza', lza')
 
 -- | Implement the `Extend` instance for `MaybeListZipper`.
 -- This instance will use the `Extend` instance for `ListZipper`.
