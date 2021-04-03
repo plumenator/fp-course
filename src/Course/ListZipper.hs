@@ -791,8 +791,10 @@ instance Traversable ListZipper where
 -- >>> traverse id (isZ (zipper [Full 1, Full 2, Full 3] (Full 4) [Full 5, Full 6, Full 7]))
 -- Full [1,2,3] >4< [5,6,7]
 instance Traversable MaybeListZipper where
-  traverse =
-    error "todo: Course.ListZipper traverse#instance MaybeListZipper"
+  traverse akb mlza =
+    optional ((isZ <$>) . traverse akb)
+    (pure isNotZ)
+    (toOptional mlza)
 
 -----------------------
 -- SUPPORT LIBRARIES --
