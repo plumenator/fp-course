@@ -169,8 +169,15 @@ valueParser a =
   Parser a
   -> Parser a
   -> Parser a
-(|||) =
-  error "todo: Course.Parser#(|||)"
+(|||) pa pa2 =
+  P (\input ->
+       let firstResult = parse pa input
+       in if isErrorResult firstResult
+          then
+            parse pa2 input
+          else
+            firstResult
+    )
 
 infixl 3 |||
 
