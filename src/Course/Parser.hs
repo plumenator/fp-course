@@ -120,7 +120,10 @@ constantParser =
 character ::
   Parser Char
 character =
-  error "todo: Course.Parser#character"
+  P f
+  where
+    f (x :. xs) = Result xs x
+    f Nil       = UnexpectedEof
 
 -- | Parsers can map.
 -- Write a Functor instance for a @Parser@.
