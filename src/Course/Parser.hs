@@ -135,8 +135,8 @@ instance Functor Parser where
     (a -> b)
     -> Parser a
     -> Parser b
-  (<$>) =
-     error "todo: Course.Parser (<$>)#instance Parser"
+  (<$>) ab pa =
+     P (\input -> ab <$> parse pa input)
 
 -- | Return a parser that always succeeds with the given value and consumes no input.
 --
