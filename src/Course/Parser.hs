@@ -139,6 +139,7 @@ instance Functor Parser where
     -> Parser b
   (<$>) ab pa =
      P ((ab <$>) . parse pa)
+     -- P (\input -> ab <$> parse pa input)
 
 -- | Return a parser that always succeeds with the given value and consumes no input.
 --
