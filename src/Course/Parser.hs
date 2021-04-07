@@ -213,8 +213,14 @@ instance Monad Parser where
     (a -> Parser b)
     -> Parser a
     -> Parser b
-  (=<<) =
-    error "todo: Course.Parser (=<<)#instance Parser"
+  (=<<) apb pa =
+    P (let f (Result remaining a) = parse (apb a) remaining
+           f UnexpectedEof = UnexpectedEof
+           f (ExpectedEof i) = (ExpectedEof i)
+           f (UnexpectedChar c) = (UnexpectedChar c)
+           f (UnexpectedString s) = (UnexpectedString s)
+        in f . parse pa
+      )
 
 -- | Write an Applicative functor instance for a @Parser@.
 -- /Tip:/ Use @(=<<)@.
