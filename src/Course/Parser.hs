@@ -616,7 +616,10 @@ phoneBodyParser =
 phoneParser ::
   Parser Chars
 phoneParser =
-  error "todo: Course.Parser#phoneParser"
+  digit >>= \d
+  -> phoneBodyParser >>= \b
+  -> is '#' >>= \_
+  -> pure (d :. b)
 
 -- | Write a parser for Person.
 --
