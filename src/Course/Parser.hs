@@ -275,8 +275,8 @@ satisfy cb =
 -- /Tip:/ Use the @satisfy@ function.
 is ::
   Char -> Parser Char
-is =
-  error "todo: Course.Parser#is"
+is c =
+  satisfy (== c)
 
 -- | Return a parser that produces a character between '0' and '9' but fails if
 --
