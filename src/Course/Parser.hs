@@ -342,7 +342,7 @@ space =
   -> Parser (List a)
   -> Parser (List a)
 (.:.) =
-  error "todo: Course.Parser#(.:.)"
+  lift2 (:.)
 
 infixr 5 .:.
 
