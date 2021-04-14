@@ -532,7 +532,9 @@ firstNameParser =
 surnameParser ::
   Parser Chars
 surnameParser =
-  error "todo: Course.Parser#surnameParser"
+  upper .:. (thisMany 5 lower >>= \cs
+              -> list lower >>= \cs2
+              -> pure (cs ++ cs2))
 
 -- | Write a parser for Person.smoker.
 --
