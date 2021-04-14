@@ -476,8 +476,8 @@ thisMany ::
   Int
   -> Parser a
   -> Parser (List a)
-thisMany =
-  error "todo: Course.Parser#thisMany"
+thisMany i =
+  sequenceParser . replicate i
 
 -- | This one is done for you.
 --
