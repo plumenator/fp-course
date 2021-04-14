@@ -510,7 +510,7 @@ ageParser =
 firstNameParser ::
   Parser Chars
 firstNameParser =
-  error "todo: Course.Parser#firstNameParser"
+  upper .:. list lower
 
 -- | Write a parser for Person.surname.
 --
