@@ -148,7 +148,7 @@ valueParser ::
   a
   -> Parser a
 valueParser a =
-  P (\input -> Result input a)
+  P (flip Result a)
 
 -- | Return a parser that tries the first parser for a successful value.
 --
