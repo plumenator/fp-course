@@ -253,8 +253,11 @@ instance Applicative Parser where
 satisfy ::
   (Char -> Bool)
   -> Parser Char
-satisfy =
-  error "todo: Course.Parser#satisfy"
+satisfy p =
+  (\c ->
+     if p c
+     then P (flip Result c)
+     else unexpectedCharParser c) =<< character
 
 -- | Return a parser that produces the given character but fails if
 --
