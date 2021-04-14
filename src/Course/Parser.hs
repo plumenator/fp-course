@@ -370,8 +370,8 @@ infixr 5 .:.
 list ::
   Parser a
   -> Parser (List a)
-list =
-  error "todo: Course.Parser#list"
+list pa =
+  list1 pa ||| pure Nil
 
 -- | Return a parser that produces at least one value from the given parser then
 -- continues producing a list of values from the given parser (to ultimately produce a non-empty list).
@@ -389,8 +389,8 @@ list =
 list1 ::
   Parser a
   -> Parser (List a)
-list1 =
-  error "todo: Course.Parser#list1"
+list1 pa =
+  (.:. list pa) . pure =<< pa
 
 -- | Return a parser that produces one or more space characters
 -- (consuming until the first non-space) but fails if
