@@ -582,7 +582,8 @@ smokerParser =
   --              'y' -> Result r True
   --              'n' -> Result r False
   --              _   -> UnexpectedChar c)
-  const True <$> is 'y' ||| const False <$> is 'n'
+  -- const True <$> is 'y' ||| const False <$> is 'n'
+  True <$ is 'y' ||| False <$ is 'n'
 
 -- | Write part of a parser for Person#phoneBody.
 -- This parser will only produce a string of digits, dots or hyphens.
