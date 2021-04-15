@@ -619,8 +619,9 @@ phoneParser ::
 phoneParser =
   digit >>= \d
   -> phoneBodyParser >>= \b
-  -> is '#' >>= \_
-  -> pure (d :. b)
+  -- -> is '#' >>= \_ ->
+  -> is '#' *>
+  pure (d :. b)
 
 -- | Write a parser for Person.
 --
