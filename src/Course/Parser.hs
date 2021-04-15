@@ -696,8 +696,53 @@ phoneParser =
 -- Result >< Person 123 "Fred" "Clarkson" True "123-456.789"
 personParser ::
   Parser Person
+-- personParser =
+--   ageParser >>= \a ->
+--   spaces1 >>= \_ ->
+--   firstNameParser >>= \f ->
+--   spaces1 >>= \_ ->
+--   surnameParser >>= \s ->
+--   spaces1 >>= \_ ->
+--   smokerParser >>= \o ->
+--   spaces1 >>= \_ ->
+--   phoneParser >>= \p ->
+--   pure (Person a f s o p)
+-- personParser = do
+--   a <- ageParser
+--   spaces1
+--   f <- firstNameParser
+--   spaces1
+--   s <- surnameParser
+--   spaces1
+--   o <- smokerParser
+--   spaces1
+--   p <- phoneParser
+--   pure (Person a f s o p)
+-- personParser =
+--   ageParser >>=~ \a ->
+--   firstNameParser >>=~ \f ->
+--   surnameParser >>=~ \s ->
+--   smokerParser >>=~ \o ->
+--   phoneParser >>= \p ->
+--   pure (Person a f s o p)
+-- personParser =
+--   Person <$>
+--   ageParser <*>
+--   spaces1 *>
+--   firstNameParser <*>
+--   spaces1 *>
+--   surnameParser <*>
+--   spaces1 *>
+--   smokerParser <*>
+--   spaces1 *>
+--   phoneParser
 personParser =
-  error "todo: Course.Parser#personParser"
+  Person <$>
+  ageParser <*>~
+  firstNameParser <*>~
+  surnameParser <*>~
+  smokerParser <*>~
+  phoneParser
 
 -- Make sure all the tests pass!
 
