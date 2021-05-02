@@ -103,7 +103,7 @@ commaTok =
 quote ::
   Parser Char
 quote =
-  error "todo: Course.MoreParser#quote"
+  is '\'' ||| is '"'
 
 -- | Write a function that parses the given string (fails otherwise).
 --
