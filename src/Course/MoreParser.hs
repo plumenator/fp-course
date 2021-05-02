@@ -149,7 +149,7 @@ option ::
   -> Parser a
   -> Parser a
 option =
-  error "todo: Course.MoreParser#option"
+  flip (|||) . pure
 
 -- | Write a parser that parses 1 or more digits.
 --
