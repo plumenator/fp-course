@@ -38,6 +38,8 @@ instance Monad ExactlyOne where
     -> ExactlyOne b
   -- (=<<) f =
   --   f . runExactlyOne
+  -- (=<<) akb (ExactlyOne a) =
+  --   akb a
   (=<<) =
     (. runExactlyOne)
 
@@ -74,7 +76,8 @@ instance Monad ((->) t) where
     (a -> ((->) t b))
     -> ((->) t a)
     -> ((->) t b)
-  (=<<) f g t = f (g t) t
+  (=<<) akb ka t =
+    akb (ka t) t
 
 -- | Witness that all things with (=<<) and (<$>) also have (<*>).
 --
@@ -116,6 +119,7 @@ instance Monad ((->) t) where
   -- f kab =<< ka
   -- where
   --   f kg a = ($ a) <$> kg
+  -- ((\a -> ($ a) <$> kab) =<< ka)
   -- kab >>= (<$> ka)
   (<$> ka) =<< kab
 
