@@ -133,7 +133,7 @@ stringTok ::
   Chars
   -> Parser Chars
 stringTok =
-  error "todo: Course.MoreParser#stringTok"
+  tok . string
 
 -- | Write a function that tries the given parser, otherwise succeeds by producing the given value.
 --
