@@ -408,7 +408,8 @@ satisfyAny ::
   List (Char -> Bool)
   -> Parser Char
 satisfyAny =
-  error "todo: Course.MoreParser#satisfyAny"
+  satisfy . ((or .) . sequence)
+
 
 -- | Write a parser that parses between the two given characters, separated by a comma character ','.
 --
