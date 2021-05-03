@@ -338,8 +338,8 @@ sepby ::
   Parser a
   -> Parser s
   -> Parser (List a)
-sepby =
-  error "todo: Course.MoreParser#sepby"
+sepby pa ps =
+  sepby1 pa ps ||| pure Nil
 
 -- | Write a parser that asserts that there is no remaining input.
 --
