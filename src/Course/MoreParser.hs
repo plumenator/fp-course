@@ -321,8 +321,14 @@ sepby1 ::
   Parser a
   -> Parser s
   -> Parser (List a)
-sepby1 =
-  error "todo: Course.MoreParser#sepby1"
+sepby1 pa ps =
+  -- pa >>= \a -> list (ps *> pa) >>= \as -> pure (a :. as)
+  -- do
+  --   a <- pa
+  --   as <- list (ps *> pa)
+  --   pure (a :. as)
+  -- (:.) <$> pa <*> list (ps *> pa)
+  lift2 (:.) pa (list (ps *> pa))
 
 -- | Write a function that produces a list of values coming off the given parser,
 -- separated by the second given parser.
