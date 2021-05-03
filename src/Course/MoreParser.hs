@@ -178,7 +178,7 @@ oneof ::
   Chars
   -> Parser Char
 oneof =
-  error "todo: Course.MoreParser#oneof"
+  satisfy . flip elem
 
 -- | Write a function that parses any character, but fails if it is in the given string.
 --
