@@ -272,7 +272,11 @@ betweenCharTok o c =
 hex ::
   Parser Char
 hex =
-  error "todo: Course.MoreParser#hex"
+  chr . f <$> replicateA 4 (satisfy isHexDigit)
+  where
+    f cs = case readHex cs of
+            Empty -> error ("non hex digits, this shouldn't happen")
+            Full n -> n
 
 -- | Write a function that parses the character 'u' followed by 4 hex digits and return the character value.
 --
