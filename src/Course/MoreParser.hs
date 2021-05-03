@@ -163,7 +163,7 @@ option =
 digits1 ::
   Parser Chars
 digits1 =
-  error "todo: Course.MoreParser#digits1"
+  list1 digit
 
 -- | Write a function that parses one of the characters in the given string.
 --
