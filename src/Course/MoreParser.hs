@@ -193,7 +193,7 @@ noneof ::
   Chars
   -> Parser Char
 noneof =
-  error "todo: Course.MoreParser#noneof"
+  satisfy . flip notElem
 
 -- | Write a function that applies the first parser, runs the third parser keeping the result,
 -- then runs the second parser and produces the obtained result.
