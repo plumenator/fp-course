@@ -387,7 +387,7 @@ satisfyAll ::
   List (Char -> Bool)
   -> Parser Char
 satisfyAll =
-  error "todo: Course.MoreParser#satisfyAll"
+  satisfy . ((and .) . sequence)
 
 -- | Write a parser that produces a character that satisfies any of the given predicates.
 --
