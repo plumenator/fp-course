@@ -363,7 +363,9 @@ sepby pa ps =
 eof ::
   Parser ()
 eof =
-  error "todo: Course.MoreParser#eof"
+  P (\s -> case s of
+        "" -> Result "" ()
+        _ -> ExpectedEof s)
 
 -- | Write a parser that produces a character that satisfies all of the given predicates.
 --
