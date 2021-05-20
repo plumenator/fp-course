@@ -156,8 +156,10 @@ join =
   k a
   -> (a -> k b)
   -> k b
-(>>=) ka akb =
-  join (akb <$> ka)
+-- (>>=) ka akb =
+--  join (akb <$> ka)
+(>>=) =
+  flip (=<<)
 
 infixl 1 >>=
 
