@@ -87,6 +87,10 @@ printFile ::
   -> IO ()
 printFile fp cs =
   putStrLn fp >>= \_ -> putStrLn cs
+  --  do
+  --    putStrLn fp
+  --    putStrLn cs
+  --  putStrLn fp >> putStrLn cs
 
 -- Given a list of (file name and file contents), print each.
 -- Use @printFile@.
@@ -95,6 +99,7 @@ printFiles ::
   -> IO ()
 printFiles =
   -- foldLeft (>>) (pure ()) . (<$>) (\(fp, cs) -> printFile fp cs)
+  -- void . sequence . (uncurry printFile <$>)
   void . traverseList (\(fp, cs) -> printFile fp cs)
 
 -- Given a file name, return (file name and file contents).
@@ -103,6 +108,9 @@ getFile ::
   FilePath
   -> IO (FilePath, Chars)
 getFile fp =
+  -- do
+  --   t <- readFile fp
+  --   pure (fp, t)
   (,) fp <$> readFile fp
 
 -- Given a list of file names, return list of (file name and file contents).
@@ -111,6 +119,7 @@ getFiles ::
   List FilePath
   -> IO (List (FilePath, Chars))
 getFiles =
+  -- sequence . (getFile <$>)
   traverseList getFile
 
 traverseList :: Applicative k => (a -> k b) -> List a -> k (List b)
@@ -122,15 +131,24 @@ run ::
   FilePath
   -> IO ()
 run fp =
- readFile fp >>= pure . lines >>= getFiles >>= printFiles
+  -- do
+  --   f <- readFile fp
+  --   let fps = lines f
+  --   fpchs <- getFiles fps
+  --   printFiles fpchs
+  readFile fp >>= pure . lines >>= getFiles >>= printFiles
 
 -- /Tip:/ use @getArgs@ and @run@
 main ::
   IO ()
 main =
+  -- do
+  --  args <- getArgs
+  --  void . sequence $ run <$> args
    getArgs >>= pure . (map run) >>= foldLeft (>>) (pure ())
 
 ----
+
 
 -- Was there was some repetition in our solution?
 -- ? `sequence . (<$>)`
