@@ -120,10 +120,12 @@ constantParser =
 character ::
   Parser Char
 character =
-  P f
-  where
-    f (x :. xs) = Result xs x
-    f Nil       = UnexpectedEof
+  -- P f
+  -- where
+  --   f (x :. xs) = Result xs x
+  --   f Nil       = UnexpectedEof
+  P (\input -> case input of Nil -> UnexpectedEof
+                             (c :. rest) -> Result rest c)
 
 -- | Parsers can map.
 -- Write a Functor instance for a @Parser@.
@@ -170,14 +172,17 @@ valueParser a =
   -> Parser a
   -> Parser a
 (|||) pa pa2 =
-  P (\input ->
-       let firstResult = parse pa input
-       in if isErrorResult firstResult
-          then
-            parse pa2 input
-          else
-            firstResult
-    )
+  -- P (\input ->
+  --      let firstResult = parse pa input
+  --      in if isErrorResult firstResult
+  --         then
+  --           parse pa2 input
+  --         else
+  --           firstResult
+  --   )
+  P (\input -> case parse pa input of
+                 fr@(Result _ _) -> fr
+                 _ -> parse pa2 input)
 
 infixl 3 |||
 
