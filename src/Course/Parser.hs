@@ -214,13 +214,15 @@ instance Monad Parser where
     -> Parser a
     -> Parser b
   (=<<) apb pa =
-    P (let f (Result remaining a) = parse (apb a) remaining
-           f UnexpectedEof = UnexpectedEof
-           f (ExpectedEof i) = (ExpectedEof i)
-           f (UnexpectedChar c) = (UnexpectedChar c)
-           f (UnexpectedString s) = (UnexpectedString s)
-        in f . parse pa
-      )
+    -- P (let f (Result remaining a) = parse (apb a) remaining
+    --        f UnexpectedEof = UnexpectedEof
+    --        f (ExpectedEof i) = (ExpectedEof i)
+    --        f (UnexpectedChar c) = (UnexpectedChar c)
+    --        f (UnexpectedString s) = (UnexpectedString s)
+    --     in f . parse pa
+    --   )
+    P (\input -> onResult (parse pa input)
+        (\input2 a -> parse (apb a) input2))
 
 -- | Write an Applicative functor instance for a @Parser@.
 -- /Tip:/ Use @(=<<)@.
@@ -235,7 +237,10 @@ instance Applicative Parser where
     -> Parser a
     -> Parser b
   (<*>) pab pa =
-    (\ab -> (pure . ab)  =<< pa) =<< pab
+    -- (\ab -> (pure . ab)  =<< pa) =<< pab
+    -- P (\input -> onResult (parse pab input)
+    --     (\input2 ab -> parse (ab <$> pa) input2))
+    (\ab -> ab <$> pa) =<< pab
 
 -- | Return a parser that produces a character but fails if
 --
@@ -253,11 +258,13 @@ instance Applicative Parser where
 satisfy ::
   (Char -> Bool)
   -> Parser Char
-satisfy p =
-  (\c ->
-     if p c
-     then P (flip Result c)
-     else unexpectedCharParser c) =<< character
+-- satisfy p =
+--   (\c ->
+--      if p c
+--      then P (flip Result c)
+--      else unexpectedCharParser c) =<< character
+satisfy cb =
+  (\c -> if cb c then valueParser c else unexpectedCharParser c) =<< character
 
 -- | Return a parser that produces the given character but fails if
 --
