@@ -113,7 +113,31 @@ toSpecialCharacter c =
 jsonString ::
   Parser Chars
 jsonString =
-  error "todo: Course.JsonParser#jsonString"
+  do
+    _ <- is '"'
+    js <- list jsonChar
+    _ <- charTok '"'
+    pure js
+
+jsonChar ::
+  Parser Char
+jsonChar =
+  do
+    let notQuot = noneof "\""
+    c <- notQuot
+    if c == '\\'
+      then
+        do c2 <- notQuot
+           if c2 == 'u' then
+               hex
+             else
+               case toSpecialCharacter c2 of
+                 Empty ->
+                   unexpectedCharParser c2
+                 Full sp ->
+                   return (fromSpecialCharacter sp)
+      else
+        return c
 
 -- | Parse a JSON rational.
 --
