@@ -258,7 +258,7 @@ jsonArray =
 jsonObject ::
   Parser Assoc
 jsonObject =
-  error "todo: Course.JsonParser#jsonObject"
+  betweenSepbyComma '{' '}' ((,) <$> jsonString <*> charTok ':' *> jsonValue)
 
 -- | Parse a JSON value.
 --
