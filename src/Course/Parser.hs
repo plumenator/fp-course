@@ -222,7 +222,7 @@ instance Monad Parser where
     --     in f . parse pa
     --   )
     P (\input -> onResult (parse pa input)
-        (\input2 a -> parse (apb a) input2))
+        (\remaining a -> parse (apb a) remaining))
 
 -- | Write an Applicative functor instance for a @Parser@.
 -- /Tip:/ Use @(=<<)@.
