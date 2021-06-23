@@ -390,7 +390,11 @@ list1 ::
   Parser a
   -> Parser (List a)
 list1 pa =
-  (.:. list pa) . pure =<< pa
+  -- (.:. list pa) . pure =<< pa
+  -- (\a -> pure a .:. list pa) =<< pa
+  do
+    a <- pa
+    pure a .:. list pa
 
 -- | Return a parser that produces one or more space characters
 -- (consuming until the first non-space) but fails if
