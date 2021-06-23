@@ -290,5 +290,5 @@ jsonValue =
 readJsonValue ::
   FilePath
   -> IO (ParseResult JsonValue)
-readJsonValue =
-  error "todo: Course.JsonParser#readJsonValue"
+readJsonValue fp =
+  readFile fp >>= pure . parse jsonValue
