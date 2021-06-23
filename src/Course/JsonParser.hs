@@ -173,7 +173,7 @@ jsonChar =
 jsonNumber ::
   Parser Rational
 jsonNumber =
-  error "todo: Course.JsonParser#jsonNumber"
+  P (\input -> optional (uncurry (flip Result)) (UnexpectedString input) (readFloats input))
 
 -- | Parse a JSON true literal.
 --
