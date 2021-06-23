@@ -296,7 +296,14 @@ jsonObject =
 jsonValue ::
   Parser JsonValue
 jsonValue =
-   error "todo: Course.JsonParser#jsonValue"
+  spaces *>
+  (JsonNull <$ jsonNull
+    ||| JsonTrue <$ jsonTrue
+    ||| JsonFalse <$ jsonFalse
+    ||| JsonArray <$> jsonArray
+    ||| JsonString <$> jsonString
+    ||| JsonObject <$> jsonObject
+    ||| JsonRational <$> jsonNumber)
 
 -- | Read a file into a JSON value.
 --
