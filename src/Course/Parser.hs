@@ -460,7 +460,17 @@ sequenceParser ::
   List (Parser a)
   -> Parser (List a)
 sequenceParser =
-  foldRight (.:.) (pure Nil)
+  -- sequence
+  -- foldRight (\pa pla ->
+  --              pa >>= \a ->
+  --               pla >>= \la ->
+  --               P (\input -> Result input (a :. la))) (pure Nil)
+  -- foldRight (.:.) (pure Nil)
+  foldRight (\pa pla ->
+                do
+                  a <- pa
+                  la <- pla
+                  P (\input -> Result input (a :. la))) (pure Nil)
 
 -- | Return a parser that produces the given number of values off the given parser.
 -- This parser fails if the given parser fails in the attempt to produce the given number of values.
@@ -477,7 +487,8 @@ thisMany ::
   -> Parser a
   -> Parser (List a)
 thisMany i =
-  sequenceParser . replicate i
+  --  sequenceParser . replicate i
+  replicateA i
 
 -- | This one is done for you.
 --
@@ -510,7 +521,10 @@ ageParser =
 firstNameParser ::
   Parser Chars
 firstNameParser =
-  upper .:. list lower
+  --  upper .:. list lower
+  do
+    u <- upper
+    pure u .:. (list lower)
 
 -- | Write a parser for Person.surname.
 --
@@ -532,9 +546,14 @@ firstNameParser =
 surnameParser ::
   Parser Chars
 surnameParser =
-  upper .:. (thisMany 5 lower >>= \cs
-              -> list lower >>= \cs2
-              -> pure (cs ++ cs2))
+  -- upper .:. (thisMany 5 lower >>= \cs
+  --             -> list lower >>= \cs2
+  --             -> pure (cs ++ cs2))
+  do
+    u <- upper
+    five <- thisMany 5 lower
+    rest <- list lower
+    pure (u :. (five ++ rest))
 
 -- | Write a parser for Person.smoker.
 --
