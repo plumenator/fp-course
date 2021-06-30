@@ -113,7 +113,12 @@ convertInteractive =
 reverseInteractive ::
   IO ()
 reverseInteractive =
-  error "todo: Course.Interactive#reverseInteractive"
+  putStr "Enter a file name to reverse: " >-
+  getLine >>= \toReverse ->
+  putStr "Enter a file name to write the output to: " >-
+  getLine >>= \theOutput ->
+  readFile toReverse >>= \contents ->
+  writeFile theOutput (reverse contents)
 
 -- |
 --
