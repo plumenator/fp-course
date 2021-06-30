@@ -83,7 +83,9 @@ data Op =
 convertInteractive ::
   IO ()
 convertInteractive =
-  error "todo: Course.Interactive#convertInteractive"
+  putStr "Write me a line: " >-
+  getLine >>= \line ->
+  putStrLn (toUpper <$> line)
 
 -- |
 --
