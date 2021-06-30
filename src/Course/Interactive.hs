@@ -144,7 +144,15 @@ reverseInteractive =
 encodeInteractive ::
   IO ()
 encodeInteractive =
-  error "todo: Course.Interactive#encodeInteractive"
+  do
+    putStr "Enter a string to encode: "
+    toEncode <- getLine
+    let encode = (\c -> case c of
+                          ' ' -> "%20"
+                          '\t' -> "%09"
+                          '"' -> "%22"
+                          other -> other :. Nil)
+    putStrLn (flatMap encode toEncode)
 
 interactive ::
   IO ()
