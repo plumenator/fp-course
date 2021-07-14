@@ -323,5 +323,86 @@ fromChar _ =
 dollars ::
   Chars
   -> Chars
-dollars =
-  error "todo: Course.Cheque#dollars"
+dollars text =
+  dollas ++ " " ++ d ++ " and " ++ cents ++ " " ++ c
+  where
+    dollas = english $ mapMaybe fromChar $ takeWhile (/= '.') text
+    cents =  english $ pad $ take 2 $ mapMaybe fromChar (drop 1 (dropWhile (/= '.') text))
+    d = case dollas of
+      "one" -> "dollar"
+      _     -> "dollars"
+    c = case cents of
+      "one" -> "cent"
+      _     -> "cents"
+    pad cs = case cs of
+               (i :. Nil) -> i :. Zero :. Nil
+               _          -> cs
+
+english ::
+  List Digit
+  -> Chars
+english Nil = "zero"
+english digits =
+  foldRight (\(prefix, count) rest -> g prefix rest count) Nil
+  $ reverse $ zip illion (digit3s (reverse digits))
+  where
+    g Nil Nil count = describe count
+    g _ rest (D1 Zero) = rest
+    g _ rest (D2 Zero Zero) = rest
+    g _ rest (D3 Zero Zero Zero) = rest
+    g Nil rest count = describe count ++ " " ++ rest
+    g prefix Nil count = describe count ++ " " ++ prefix
+    g prefix rest count   = describe count ++ " " ++ prefix ++ " " ++ rest
+
+mapMaybe ::
+  (a -> Optional b)
+  -> List a
+  -> List b
+mapMaybe ab =
+  foldRight (\a lb -> case ab a of
+                        Empty  -> lb
+                        Full b -> b :. lb) Nil
+
+describe ::
+  Digit3
+  -> Chars
+describe (D1 d) = showDigit d
+describe (D2 Zero d) = describe (D1 d)
+describe (D2 One Zero) = "ten"
+describe (D2 One One) = "eleven"
+describe (D2 One Two) = "twelve"
+describe (D2 One Three) = "thirteen"
+describe (D2 One Four) = "fourteen"
+describe (D2 One Five) = "fifteen"
+describe (D2 One Six) = "sixteen"
+describe (D2 One Seven) = "seventeen"
+describe (D2 One Eight) = "eighteen"
+describe (D2 One Nine) = "nineteen"
+describe (D2 Two Zero) = "twenty"
+describe (D2 Three Zero) = "thirty"
+describe (D2 Four Zero) = "forty"
+describe (D2 Five Zero) = "fifty"
+describe (D2 Six Zero) = "sixty"
+describe (D2 Seven Zero) = "seventy"
+describe (D2 Eight Zero) = "eighty"
+describe (D2 Nine Zero) = "ninety"
+describe (D2 Two d) = "twenty-" ++ describe (D1 d)
+describe (D2 Three d) = "thirty-" ++ describe (D1 d)
+describe (D2 Four d) = "forty-" ++ describe (D1 d)
+describe (D2 Five d) = "fifty-" ++ describe (D1 d)
+describe (D2 Six d) = "sixty-" ++ describe (D1 d)
+describe (D2 Seven d) = "seventy-" ++ describe (D1 d)
+describe (D2 Eight d) = "eighty-" ++ describe (D1 d)
+describe (D2 Nine d) = "ninety-" ++ describe (D1 d)
+describe (D3 Zero Zero d) = describe (D1 d)
+describe (D3 Zero d d2) = describe (D2 d d2)
+describe (D3 d Zero Zero) = describe (D1 d) ++ " hundred"
+describe (D3 d d2 d3) = describe (D1 d) ++ " hundred and " ++ describe (D2 d2 d3)
+
+digit3s ::
+  List Digit
+  -> List Digit3
+digit3s Nil = Nil
+digit3s (c :. Nil) = D1 c :. Nil
+digit3s (c :. c2 :. Nil) = D2 c2 c :. Nil
+digit3s (c :. c2 :. c3 :. cs) = D3 c3 c2 c :. digit3s cs
