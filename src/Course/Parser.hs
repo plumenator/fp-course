@@ -572,6 +572,16 @@ surnameParser =
 smokerParser ::
   Parser Bool
 smokerParser =
+  -- (is 'y' ||| is 'n') >>= (\c -> P (\r -> case c of
+  --                                      'y' -> Result r True
+  --                                      'n' -> Result r False
+  --                                      _   -> UnexpectedChar c))
+  -- do
+  --   c <- is 'y' ||| is 'n'
+  --   P (\r -> case c of
+  --              'y' -> Result r True
+  --              'n' -> Result r False
+  --              _   -> UnexpectedChar c)
   const True <$> is 'y' ||| const False <$> is 'n'
 
 -- | Write part of a parser for Person#phoneBody.
@@ -616,10 +626,22 @@ phoneBodyParser =
 phoneParser ::
   Parser Chars
 phoneParser =
-  digit >>= \d
-  -> phoneBodyParser >>= \b
-  -> is '#' >>= \_
-  -> pure (d :. b)
+  -- (digit .:. phoneBodyParser) >>= \phone ->
+  -- is '#' >>= \_ ->
+  -- pure phone
+
+  -- digit >>= \d ->
+  -- phoneBodyParser >>= \body ->
+  -- is '#' >>= \_ ->
+  -- pure (d :. body)
+
+  -- do
+  --   d <- digit
+  --   body <- phoneBodyParser
+  --   is '#'
+  --   pure (d :. body)
+
+  digit .:. phoneBodyParser <* is '#'
 
 -- | Write a parser for Person.
 --
@@ -666,11 +688,9 @@ phoneParser =
 --
 -- >>> parse personParser "123 Fred Clarkson y 123-456.789#"
 -- Result >< Person 123 "Fred" "Clarkson" True "123-456.789"
-
 --
 -- >>> parse personParser "123 Fred Clarkson y 123-456.789# rest"
 -- Result > rest< Person 123 "Fred" "Clarkson" True "123-456.789"
-
 --
 -- >>> parse personParser "123  Fred   Clarkson    y     123-456.789#"
 -- Result >< Person 123 "Fred" "Clarkson" True "123-456.789"
