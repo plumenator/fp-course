@@ -84,13 +84,13 @@ instance Alternative List where
   zero ::
     List a
   zero =
-    error "todo: Course.Alternative zero#instance List"
+    Nil
   (<|>) ::
     List a
     -> List a
     -> List a
   (<|>) =
-    error "todo: Course.Alternative (<|>)#instance List"
+    (++)
 
 -- | Choose the first succeeding parser
 --
