@@ -111,13 +111,13 @@ instance Alternative Parser where
   zero ::
     Parser a
   zero =
-    error "todo: Course.Alternative zero#instance Parser"
+    constantParser UnexpectedEof
   (<|>) ::
     Parser a
     -> Parser a
     -> Parser a
   (<|>) =
-    error "todo: Course.Alternative (<|>)#instance Parser"
+    (|||)
 
 -- | Run the provided Alternative action zero or more times, collecting
 -- a list of the results.
