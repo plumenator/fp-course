@@ -176,4 +176,4 @@ some =
 -- /Note:/ In the standard library, this function is called @asum@
 aconcat :: Alternative k => List (k a) -> k a
 aconcat =
-  error "todo: Course.Alternative aconcat"
+  foldRight (<|>) zero
