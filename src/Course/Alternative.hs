@@ -60,13 +60,13 @@ instance Alternative Optional where
   zero ::
     Optional a
   zero =
-    error "todo: Course.Alternative zero#instance Optional"
+    Empty
   (<|>) ::
     Optional a
     -> Optional a
     -> Optional a
   (<|>) =
-    error "todo: Course.Alternative (<|>)#instance Optional"
+    (<+>)
 
 -- | Append the lists.
 -- This instance views lists as a non-deterministic choice between elements,
