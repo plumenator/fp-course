@@ -142,8 +142,8 @@ instance Alternative Parser where
 -- >>> parse (many (character *> valueParser 'v')) ""
 -- Result >< ""
 many :: Alternative k => k a -> k (List a)
-many =
-  error "todo: Course.Alternative many"
+many ka =
+  some ka <|> pure Nil
 
 -- | Run the provided Alternative action one or more times, collecting
 -- a list of the results.
@@ -159,8 +159,8 @@ many =
 -- >>> isErrorResult (parse (some (character *> valueParser 'v')) "")
 -- True
 some :: Alternative k => k a -> k (List a)
-some =
-  error "todo: Course.Alternative some"
+some ka =
+  (:.) <$> ka <*> many ka
 
 -- | Combine a list of alternatives
 --
