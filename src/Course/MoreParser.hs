@@ -150,6 +150,8 @@ option ::
   -> Parser a
 option =
   flip (|||) . pure
+-- option a pa =
+--   pa ||| pure a
 
 -- | Write a parser that parses 1 or more digits.
 --
@@ -178,6 +180,7 @@ oneof ::
   Chars
   -> Parser Char
 oneof =
+--  satisfy (\c -> c `elem` cs)
   satisfy . flip elem
 
 -- | Write a function that parses any character, but fails if it is in the given string.
@@ -217,7 +220,16 @@ between ::
   -> Parser a
   -> Parser a
 between po pc pa =
-  po *> pa <* pc
+   po *> pa <* pc
+  -- do
+  --   po
+  --   a <- pa
+  --   pc
+  --   pure a
+  -- po >>= \_ ->
+  -- pa >>= \a ->
+  -- pc >>= \_ ->
+  -- pure a
 
 -- | Write a function that applies the given parser in between the two given characters.
 --
@@ -239,8 +251,8 @@ betweenCharTok ::
   -> Char
   -> Parser a
   -> Parser a
-betweenCharTok c c2 =
-  between (charTok c) (charTok c2)
+betweenCharTok o c =
+  between (charTok o) (charTok c)
 
 -- | Write a function that parses 4 hex digits and return the character value.
 --
