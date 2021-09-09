@@ -388,8 +388,10 @@ eof =
 satisfyAll ::
   List (Char -> Bool)
   -> Parser Char
-satisfyAll =
-  satisfy . ((and .) . sequence)
+satisfyAll ps =
+  satisfy (and . sequence ps)
+-- satisfyAll =
+--   satisfy . ((and .) . sequence)
 
 -- | Write a parser that produces a character that satisfies any of the given predicates.
 --
@@ -409,9 +411,10 @@ satisfyAll =
 satisfyAny ::
   List (Char -> Bool)
   -> Parser Char
-satisfyAny =
-  satisfy . ((or .) . sequence)
-
+satisfyAny ps =
+  satisfy (or . sequence ps)
+-- satisfyAny =
+--   satisfy . ((or .) . sequence)
 
 -- | Write a parser that parses between the two given characters, separated by a comma character ','.
 --
@@ -448,5 +451,5 @@ betweenSepbyComma ::
   -> Char
   -> Parser a
   -> Parser (List a)
-betweenSepbyComma c c2 pa =
-  betweenCharTok c c2 (sepby pa (charTok ','))
+betweenSepbyComma o c pa =
+  betweenCharTok o c (sepby pa (charTok ','))
