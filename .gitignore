@@ -40,3 +40,7 @@ ops/*.retry
 
 # nix
 result
+
+# ghc
+*.hi
+*.o
