@@ -113,31 +113,52 @@ toSpecialCharacter c =
 jsonString ::
   Parser Chars
 jsonString =
-  do
-    _ <- is '"'
-    js <- list jsonChar
-    _ <- charTok '"'
-    pure js
+  between (is '"') (charTok '"') (list stringContents)
+  where
+    notQuot = satisfy (/= '"')
+    stringContents = do
+      char <- notQuot
+      if char == '\\'
+        then
+        escapeSequence
+        else
+        pure char
+    escapeSequence = do
+      jsonChar <- character
+      if jsonChar == 'u'
+        then
+        hex
+        else
+        specialCharacter jsonChar
+    specialCharacter jsonChar =
+      case toSpecialCharacter jsonChar of
+        Full sp -> pure (fromSpecialCharacter sp)
+        Empty -> unexpectedCharParser jsonChar
+--   do
+--     _ <- is '"'
+--     js <- list jsonChar
+--     _ <- charTok '"'
+--     pure js
 
-jsonChar ::
-  Parser Char
-jsonChar =
-  do
-    let notQuot = noneof "\""
-    c <- notQuot
-    if c == '\\'
-      then
-        do c2 <- notQuot
-           if c2 == 'u' then
-               hex
-             else
-               case toSpecialCharacter c2 of
-                 Empty ->
-                   unexpectedCharParser c2
-                 Full sp ->
-                   return (fromSpecialCharacter sp)
-      else
-        return c
+-- jsonChar ::
+--   Parser Char
+-- jsonChar =
+--   do
+--     let notQuot = noneof "\""
+--     c <- notQuot
+--     if c == '\\'
+--       then
+--         do c2 <- notQuot
+--            if c2 == 'u' then
+--                hex
+--              else
+--                case toSpecialCharacter c2 of
+--                  Empty ->
+--                    unexpectedCharParser c2
+--                  Full sp ->
+--                    return (fromSpecialCharacter sp)
+--       else
+--         return c
 
 -- | Parse a JSON rational.
 --
