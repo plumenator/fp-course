@@ -131,9 +131,10 @@ jsonString =
         else
         specialCharacter jsonChar
     specialCharacter jsonChar =
-      case toSpecialCharacter jsonChar of
-        Full sp -> pure (fromSpecialCharacter sp)
-        Empty -> unexpectedCharParser jsonChar
+      -- case toSpecialCharacter jsonChar of
+      --   Full sp -> pure (fromSpecialCharacter sp)
+      --   Empty -> unexpectedCharParser jsonChar
+      optional (pure . fromSpecialCharacter) (unexpectedCharParser jsonChar) (toSpecialCharacter jsonChar)
 --   do
 --     _ <- is '"'
 --     js <- list jsonChar
@@ -194,7 +195,10 @@ jsonString =
 jsonNumber ::
   Parser Rational
 jsonNumber =
-  P (\input -> optional (uncurry (flip Result)) (UnexpectedString input) (readFloats input))
+--  P (\input -> optional (uncurry (flip Result)) (UnexpectedString input) (readFloats input))
+  P (\input -> case (readFloats input) of
+                 Empty -> UnexpectedString input
+                 Full (num, remainder) -> Result remainder num)
 
 -- | Parse a JSON true literal.
 --
@@ -279,7 +283,12 @@ jsonArray =
 jsonObject ::
   Parser Assoc
 jsonObject =
-  betweenSepbyComma '{' '}' ((,) <$> jsonString <*> charTok ':' *> jsonValue)
+--  betweenSepbyComma '{' '}' ((,) <$> jsonString <*> charTok ':' *> jsonValue)
+  betweenSepbyComma '{' '}' (do
+                                key <- jsonString
+                                charTok ':'
+                                value <- jsonValue
+                                pure (key, value))
 
 -- | Parse a JSON value.
 --
@@ -312,4 +321,8 @@ readJsonValue ::
   FilePath
   -> IO (ParseResult JsonValue)
 readJsonValue fp =
-  readFile fp >>= pure . parse jsonValue
+  --  readFile fp >>= pure . parse jsonValue
+  -- do
+  --   text <- readFile fp
+  --   pure (parse jsonValue text)
+  parse jsonValue <$> readFile fp
