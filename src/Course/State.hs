@@ -120,6 +120,7 @@ instance Applicative (State s) where
     -> State s a
   pure a =
     State ((,) a)
+    -- State (\s -> (a, s))
   (<*>) ::
     State s (a -> b)
     -> State s a
@@ -128,6 +129,12 @@ instance Applicative (State s) where
     State (\s -> let (f, s' ) = runState sf s
                      (a, s'') = runState sa s'
                  in (f a, s''))
+  -- (<*>) (State sabs) (State sas) =
+  --   State (\s -> let (ab, s') = sabs s
+  --                    (a, s'') = sas s'
+  --                    b = ab a
+  --                in
+  --                  (b, s''))
 
 -- | Implement the `Monad` instance for `State s`.
 --
@@ -147,6 +154,12 @@ instance Monad (State s) where
   (=<<) asb sa =
     State (\s -> let (a,  s' ) = runState sa s
                  in runState (asb a) s')
+  -- (=<<) assb (State sas) =
+  --   State (\s -> let (a, s') = sas s
+  --                    State sbs = assb a
+  --                    (b, s'') = sbs s'
+  --                    in
+  --                  (b, s''))
 
 -- | Find the first element in a `List` that satisfies a given predicate.
 -- It is possible that no element is found, hence an `Optional` result.
@@ -167,13 +180,19 @@ findM ::
   (a -> f Bool)
   -> List a
   -> f (Optional a)
-findM p = foldRight fcons (pure Empty) where
+findM p =
+  foldRight fcons (pure Empty) where
   a `fcons` foa = p a >>=
-                 \b -> if b then pure (Full a) else foa
+                  \b -> if b then pure (Full a) else foa
   -- fcons a = lift2 (\b oa -> if b then Full a else oa) (p a)
   -- f can be Applicative, which is actually more general
   -- TODO: check if the monadic version is short-circuiting and the applicative one isn't
   -- https://stackoverflow.com/questions/23342184/difference-between-monad-and-applicative-in-haskell
+  -- foldRight (\a' foa -> (\b -> if b then pure (Full a') else foa) =<< (p a')) (pure Empty)
+  -- foldRight (\a' foa -> let f True = pure (Full a')
+  --                           f False = foa
+  --                       in f =<< (p a'))
+  -- (pure Empty)
 
 -- | Find the first element in a `List` that repeats.
 -- It is possible that no element repeats, hence an `Optional` result.
@@ -193,6 +212,14 @@ firstRepeat xs =
   eval (findM p xs) S.empty where
   -- p x = get >>= \s -> put (S.insert x s) >>= const (pure (S.member x s))
   p x = State (\s -> (S.member x s, S.insert x s))
+-- firstRepeat la =
+--   -- fst $ runState (findM repeated la) S.empty
+--   eval (findM repeated la) S.empty
+--   where
+--     -- repeated a = get >>= \s -> if a `S.member` s
+--     --                            then pure True
+--     --                            else const False <$> put (a `S.insert` s)
+--     repeated a = State (\s -> (a `S.member` s, a `S.insert` s))
 
 -- | Remove all duplicate elements in a `List`.
 -- /Tip:/ Use `filtering` and `State` with a @Data.Set#Set@.
@@ -204,9 +231,10 @@ distinct ::
   Ord a =>
   List a
   -> List a
-distinct xs =
-  eval (filtering p xs) S.empty where
-  p x = State (\s -> (not (S.member x s), S.insert x s))
+distinct la =
+  eval (filtering repeated la) S.empty
+  where
+    repeated a = State (\s -> (a `S.notMember` s, a `S.insert` s))
 
 -- | A happy number is a positive integer, where the sum of the square of its digits eventually reaches 1 after repetition.
 -- In contrast, a sad number (not a happy number) is where the sum of the square of its digits never reaches 1
