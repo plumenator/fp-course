@@ -13,6 +13,7 @@ import Course.Functor
 import Course.Applicative
 import Course.Monad
 import qualified Data.Set as S
+import Data.Char as C
 
 -- $setup
 -- >>> import Test.QuickCheck.Function
@@ -264,3 +265,11 @@ isHappy =
   contains 1 . firstRepeat . produce step
   where
     step = toInteger . sum . (join (*) . digitToInt <$>) . listh . show
+--   not (contains i maybeRepeat)
+--   where
+--     maybeRepeat = firstRepeat (produce square i)
+
+-- square :: Integer -> Integer
+-- square num = toInteger $ sum ((\x -> x * x) <$> digits)
+--   where
+--     digits = C.digitToInt <$> (listh $ show num)
