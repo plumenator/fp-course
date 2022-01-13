@@ -48,6 +48,8 @@ instance Functor k => Functor (StateT s k) where
   (<$>) ab ska =
     -- StateT ( \s -> let f (a, s') = (ab a, s') in f <$> runStateT ska s  )
     StateT ( \s -> (\(a, s') -> (ab a, s')) <$> runStateT ska s  )
+  -- (<$>) ab (StateT skas) =
+  --   StateT (\s -> (\(a, s2) -> (ab a, s2)) <$> (skas s))
 
 -- | Implement the `Applicative` instance for @StateT s k@ given a @Monad k@.
 --
@@ -71,6 +73,7 @@ instance Monad k => Applicative (StateT s k) where
     -> StateT s k a
   pure a =
     StateT ( pure . (,) a )
+    -- StateT (\s -> pure (a, s))
   (<*>) ::
     StateT s k (a -> b)
     -> StateT s k a
@@ -85,6 +88,10 @@ instance Monad k => Applicative (StateT s k) where
     --            runStateT ska s' >>= \(a, s'') ->
     --            pure (ab a, s'')
     --        )
+  -- (<*>) (StateT skab) (StateT ska) =
+  --   StateT (\s -> (skab s)
+  --                 >>= \(ab, s2) ->
+  --                       (\(a, s3) -> (ab a, s3)) <$> ska s2)
 
 -- | Implement the `Monad` instance for @StateT s k@ given a @Monad k@.
 -- Make sure the state value is passed through in `bind`.
@@ -104,6 +111,8 @@ instance Monad k => Monad (StateT s k) where
                runStateT ska s >>= \(a, s') ->
                runStateT (askb a) s'
            )
+  -- (=<<) askb (StateT ska) =
+  --   StateT (\s -> (ska s) >>= (\(a, s2) -> runStateT (askb a) s2))
 
 -- | A `State'` is `StateT` specialised to the `ExactlyOne` functor.
 type State' s a =
