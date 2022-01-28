@@ -125,8 +125,11 @@ type State' s a =
 state' ::
   (s -> (a, s))
   -> State' s a
-state' sas =
-  StateT ( ExactlyOne . sas  )
+-- state' sas =
+--   StateT ( ExactlyOne . sas  )
+--   StateT (\s -> ExactlyOne (sas s))
+state' =
+  StateT . (ExactlyOne .)
 
 -- | Provide an unwrapper for `State'` values.
 --
@@ -136,8 +139,8 @@ runState' ::
   State' s a
   -> s
   -> (a, s)
--- runState' sa s =
---   runExactlyOne (runStateT sa s)
+-- runState' ssa s =
+--   runExactlyOne $ runStateT ssa s
 runState' =
   (runExactlyOne .) . runStateT
 
@@ -150,8 +153,8 @@ execT ::
   StateT s k a
   -> s
   -> k s
--- execT ska s =
---   snd <$> runStateT ska s
+-- execT sska s =
+--   snd <$> (runStateT sska s)
 execT =
   ((snd <$>) .) . runStateT
 
@@ -203,7 +206,8 @@ getT ::
   Applicative k =>
   StateT s k s
 getT =
-  StateT ( \s -> pure (s, s) )
+  -- StateT (\s -> pure (s, s))
+  StateT (pure . join (,))
 
 -- | A `StateT` where the resulting state is seeded with the given value.
 --
@@ -216,8 +220,9 @@ putT ::
   Applicative k =>
   s
   -> StateT s k ()
-putT =
-  \s -> StateT ( \_ -> pure ((), s) )
+putT s =
+  -- StateT (\_ -> pure ((), s))
+  StateT (const $ pure ((), s))
 
 -- | Remove all duplicate elements in a `List`.
 --
@@ -228,10 +233,10 @@ distinct' ::
   Ord a =>
   List a
   -> List a
-distinct' xs =
-  eval' (filtering p xs) S.empty where
-  p x = state' (\s -> (not (S.member x s), S.insert x s))
-
+distinct' la =
+  eval' (filtering repeated la) S.empty
+  where
+    repeated a = state' (\s -> (a `S.notMember` s, a `S.insert` s))
 
 -- | Remove all duplicate elements in a `List`.
 -- However, if you see a value greater than `100` in the list,
@@ -248,10 +253,10 @@ distinctF ::
   (Ord a, Num a) =>
   List a
   -> Optional (List a)
-distinctF xs =
-  evalT (filtering p xs) S.empty where
-  p x = StateT (\s -> if x > 100 then Empty else Full (not (S.member x s), S.insert x s))
-
+distinctF la =
+  evalT (filtering repeated la) S.empty
+  where
+    repeated a = StateT (\s -> if a > 100 then Empty else Full (a `S.notMember` s, a `S.insert` s))
 
 -- | An `OptionalT` is a functor of an `Optional` value.
 data OptionalT k a =
