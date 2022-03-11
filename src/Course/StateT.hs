@@ -443,7 +443,7 @@ distinctG la =
   where
     check a = StateT (\s -> if a > 100
                             then OptionalT (Logger ((listh "aborting > 100: " ++ listh (show a)) :. Nil) Empty)
-                            else OptionalT (Logger (if even a then ((listh "even number:  " ++ listh (show a)) :. Nil) else Nil) (Full (S.notMember a s, S.insert a s))))
+                            else OptionalT (Logger (if even a then ((listh "even number: " ++ listh (show a)) :. Nil) else Nil) (Full (S.notMember a s, S.insert a s))))
 
 onFull ::
   Applicative k =>
