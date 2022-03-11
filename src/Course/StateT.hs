@@ -274,10 +274,12 @@ instance Functor k => Functor (OptionalT k) where
     (a -> b)
     -> OptionalT k a
     -> OptionalT k b
-  (<$>) ab oka =
-    OptionalT ( (ab <$>) <$> runOptionalT oka )
+  -- (<$>) ab oka =
+  --   OptionalT ( (ab <$>) <$> runOptionalT oka )
   -- (<$>) ab =
   --   OptionalT . ((ab <$>) <$>) . runOptionalT
+  (<$>) ab (OptionalT koa) =
+    OptionalT ((ab <$>) <$> koa)
 
 -- | Implement the `Applicative` instance for `OptionalT k` given a Monad k.
 --
@@ -307,22 +309,24 @@ instance Monad k => Applicative (OptionalT k) where
   pure ::
     a
     -> OptionalT k a
-  -- pure a =
-  --   OptionalT ( pure (Full a) )
   pure =
     -- OptionalT . pure . Full
     OptionalT . pure . pure
+  -- pure a =
+  --   OptionalT (pure (Full a))
 
   (<*>) ::
     OptionalT k (a -> b)
     -> OptionalT k a
     -> OptionalT k b
-  (<*>) okab oka =
-    OptionalT ( runOptionalT okab >>= \oab ->
-                  onFull (\ab -> runOptionalT (ab <$> oka)) oab
-              )
-    -- TODO: This solution from Brian McKenna's videos doesn't work
-    -- OptionalT ( lift2 (<*>) (runOptionalT okab) (runOptionalT oka) )
+  -- (<*>) okab oka =
+  --   OptionalT ( runOptionalT okab >>= \oab ->
+  --                 onFull (\ab -> runOptionalT (ab <$> oka)) oab
+  --             )
+  --   -- TODO: This solution from Brian McKenna's videos doesn't work
+  --   -- OptionalT ( lift2 (<*>) (runOptionalT okab) (runOptionalT oka) )
+  (<*>) (OptionalT koab) oka =
+    OptionalT ((\oab -> onFull (\ab -> runOptionalT (ab <$> oka)) oab) =<< koab)
 
 -- | Implement the `Monad` instance for `OptionalT k` given a Monad k.
 --
@@ -335,6 +339,10 @@ instance Monad k => Monad (OptionalT k) where
     -> OptionalT k b
   (=<<) aokb oka =
     OptionalT ( runOptionalT oka >>= onFull (runOptionalT . aokb) )
+  -- (=<<) aokb (OptionalT koa) =
+  --   OptionalT (koa >>= (\oa -> case oa of
+  --                                Empty -> pure Empty
+  --                                Full a -> runOptionalT (aokb a)))
 
 -- | A `Logger` is a pair of a list of log values (`[l]`) and an arbitrary value (`a`).
 data Logger l a =
@@ -350,8 +358,8 @@ instance Functor (Logger l) where
     (a -> b)
     -> Logger l a
     -> Logger l b
-  (<$>) f (Logger ls a) =
-    Logger ls (f a)
+  (<$>) ab (Logger ll a) =
+    Logger ll (ab a)
 
 -- | Implement the `Applicative` instance for `Logger`.
 --
@@ -371,8 +379,8 @@ instance Applicative (Logger l) where
     Logger l (a -> b)
     -> Logger l a
     -> Logger l b
-  (<*>) (Logger l ab) (Logger l2 a) =
-    Logger (l ++ l2) (ab a)
+  (<*>) (Logger ll ab) (Logger ll2 a) =
+    Logger (ll ++ ll2) (ab a)
 
 -- | Implement the `Monad` instance for `Logger`.
 -- The `bind` implementation must append log values to maintain associativity.
@@ -384,8 +392,12 @@ instance Monad (Logger l) where
     (a -> Logger l b)
     -> Logger l a
     -> Logger l b
-  (=<<) alb (Logger l a) =
-    Logger l id <*> (alb a)
+  (=<<) allb (Logger ll a) =
+    -- Logger (ll ++ ll2) b where
+    -- Logger ll2 b  = allb a
+    -- Logger l id <*> (alb a)
+    let Logger ll2 b = allb a
+    in Logger (ll ++ ll2) b
 
 -- | A utility function for producing a `Logger` with one log value.
 --
@@ -416,16 +428,22 @@ distinctG ::
   (Integral a, Show a) =>
   List a
   -> Logger Chars (Optional (List a))
-distinctG xs =
-  runOptionalT (evalT (filtering p xs) S.empty) where
-  p x = StateT (\s ->
-                  if x > 100
-                  then OptionalT (log1 ("aborting > 100: " ++ show' x) Empty)
-                  else OptionalT (Logger
-                                   (if even x then ("even number: " ++ show' x) :. Nil else Nil)
-                                   (Full (not (S.member x s), S.insert x s))
-                                 )
-               )
+-- distinctG xs =
+--   runOptionalT (evalT (filtering p xs) S.empty) where
+--   p x = StateT (\s ->
+--                   if x > 100
+--                   then OptionalT (log1 ("aborting > 100: " ++ show' x) Empty)
+--                   else OptionalT (Logger
+--                                    (if even x then ("even number: " ++ show' x) :. Nil else Nil)
+--                                    (Full (not (S.member x s), S.insert x s))
+--                                  )
+--                )
+distinctG la =
+  runOptionalT (evalT (filtering check la) S.empty)
+  where
+    check a = StateT (\s -> if a > 100
+                            then OptionalT (Logger ((listh "aborting > 100: " ++ listh (show a)) :. Nil) Empty)
+                            else OptionalT (Logger (if even a then ((listh "even number:  " ++ listh (show a)) :. Nil) else Nil) (Full (S.notMember a s, S.insert a s))))
 
 onFull ::
   Applicative k =>
