@@ -128,8 +128,7 @@ instance Functor ((->) t) where
   k (a -> b)
   -> a
   -> k b
-(??) =
-  error "todo: Course.Functor#(??)"
+(??) kab = (<$> kab) . flip ($)
 
 infixl 1 ??
 
